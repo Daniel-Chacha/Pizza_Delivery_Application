@@ -1,3 +1,14 @@
+
+
+export const PizzaData = [{}]
+
+
+
+
+
+
+
+
 export const Services =[{
     id: 0,
     title: " Easy Online Ordering",

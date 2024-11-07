@@ -1,8 +1,7 @@
 import  React , {useState, useEffect} from 'react';
 import Header from "../components/header";
 import Footer from "../components/footer";
-import {SignupBtn} from  "../components/signUp_btn"
-import { SigninBtn } from "../components/signIn_btn";
+import {SignBtn} from  "../components/sign_btn"
 import { Services } from "../components/data";
 import { useNavigate } from 'react-router-dom';
 
@@ -14,8 +13,9 @@ export default function LandingPage(){
     const navigate = useNavigate();
 
     //redirect function for  Sign Up  botton click
-    const handleSignUpClick =() =>{
-        navigate('/signup')
+    const handleSignClick =(event  , location) =>{
+        event.preventDefault();
+        navigate(location)
     }
 
     //effect to change the service after  every 5 seconds
@@ -33,19 +33,19 @@ export default function LandingPage(){
  
     return(
         <>
-            <main className='App'>
+            <main className='App  min-h-screen flex flex-col'>
                 <Header />
-                <div >
+                <div className='flex-grow' >
                     <div className="h-screen bg-fixed   bg-no-repeat bg-cover bg-center bg-[url('https://img.freepik.com/premium-photo/colorful-homemade-pizza-with-black-ham-cherry-tomatoes_1126714-13131.jpg?ga=GA1.1.329323705.1719251145')]" >
                             <h2 className=' text-3xl  text-white pt-28 font-bold'>Your Ultimate Pizza Destination</h2>
                             <div className=' flex gap-5  justify-center'>
-                                <SignupBtn onClick={handleSignUpClick} />
-                                <SigninBtn />
+                                <SignBtn onClick={(event) => handleSignClick(event,  "/signup")} btnName="Sign Up" />
+                                <SignBtn onClick={(event) => handleSignClick(event,  "/signin")} btnName= "Sign In"  />
                             </div>
                     </div>
-                    <article className="  h-screen bg-[url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYSxwaTqPTsKXjuhO5hvcC3d4mgEqx7sC5SA&s')] w-full ">
+                    <article className="   bg-[url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYSxwaTqPTsKXjuhO5hvcC3d4mgEqx7sC5SA&s')] w-full ">
                                 <h2 className=" text-3xl  font-bold">Our Services</h2>
-                                <div className='flex flex-wrap pt-10'>
+                                <div className='flex flex-wrap pt-10 justify-center' >
                                     <ServiceCard service={Services[index1]}/>
                                     <ServiceCard service={Services[index2]}/>
                                     <ServiceCard service={Services[index3]}/>
@@ -63,7 +63,7 @@ export default function LandingPage(){
 //Component for each card to keep code clean and reusable
 function ServiceCard({ service }){
     return(
-        <div className='bg-red-800 w-96 ml-10 rounded-lg h-130'>
+        <div className='bg-red-800 w-96 ml-6 mr-6 mb-5 rounded-lg h-130 '>
             <h3 className="text-3xl text-white underline underline-offset-4 mb-5">{service.title} </h3>
             <p>{service.p1} </p>
             <img className=" rounded pl-20 mt-10" src={service.url} alt={service.title}></img>
