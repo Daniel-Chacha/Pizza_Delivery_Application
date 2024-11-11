@@ -2,7 +2,7 @@
 import React, {useState }from "react"
 import Btn from "./btn"
 
-export default function PizzaCard({ pizza } ){
+export default function PizzaCard({ pizza , onAddToCart } ){
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [selectedSizes, setSelectedSizes] =useState([]);
     const [quantity, setQuantity]  = useState([1]);
@@ -35,6 +35,22 @@ export default function PizzaCard({ pizza } ){
     const calculateTotalPrice = () =>{
         return  selectedSizes.reduce((total,  size) => total +size.prize  *  quantity, 0);
     }
+
+    const handleAddToCart = () =>{
+        const orderItems ={
+            category :pizza.category,
+            sizes:  selectedSizes,
+            quantity:  quantity,
+            flavor: flavor,
+            totalPrice:  calculateTotalPrice()
+        };
+
+        //call the onAddToCart  function to add this item to the orders lis t in Dashboard
+        onAddToCart((prevOrders) =>[...prevOrders  ,orderItems]);
+        setSelectedSizes([]);
+        setFlavor("");
+        closeModal()
+    };
     return(
         <>
             <div className=" items-center p-5 m-5 rounded-lg shadown-md bg-white w-72">
@@ -60,7 +76,7 @@ export default function PizzaCard({ pizza } ){
                 {isModalOpen && (
                 <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
                     <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-                        <h2 className="text-xl font-bold mb-4">Customize Your Pizza</h2>
+                        <h2 className="text-xl font-bold mb-4 text-center text-green-600 underline underline-offset-2">YOUR PIZZA</h2>
 
                         {/* Quantity Selector */}
                         <label className="block mb-2">
@@ -81,7 +97,8 @@ export default function PizzaCard({ pizza } ){
                                 value={flavor}
                                 onChange={(e) => setFlavor(e.target.value)}
                                 className="ml-2 border rounded w-full"
-                                placeholder="Enter flavor">
+                                placeholder="Enter flavor"
+                                required>
                                     <option value="">Select Flavor</option>
                                     <option value="Normal">Normal</option>
                                     <option value="Salty">Salty</option>
@@ -117,7 +134,7 @@ export default function PizzaCard({ pizza } ){
                             >
                                 Cancel
                             </button>
-                            <Btn name="Add To Cart" onClick={closeModal}/>
+                            <Btn name="Add To Cart"  onClick={handleAddToCart}  />
                         </div>
                     </div>
                 </div>
