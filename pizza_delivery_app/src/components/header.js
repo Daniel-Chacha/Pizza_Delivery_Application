@@ -3,7 +3,7 @@ import Btn from "./btn";
 
 
 
-function Header({showMiniHeader = false, onCartClick , toggleCustomPizza, }){
+function Header({showMiniHeader = false, onCartClick , toggleCustomPizza, showMiniHeader2=false}){
     
     return(
         <>
@@ -13,6 +13,9 @@ function Header({showMiniHeader = false, onCartClick , toggleCustomPizza, }){
 
                     <div className="  w-1/2  basis-3/4 ml-6 ">
                     <h1 className="text-7xl font-bold  text-white text-center max-[640px]:text-5xl " >Pizza Inn</h1>
+                    {/* {showMiniHeader2 && (
+                        <span className="text-7xl font-bold  text-white text-center max-[640px]:text-5xl ">ADMIN</span>
+                    ) } */}
                     
                     </div>
                     <img src="placeholder.com" alt="logo" className="basis-1/8 ml-10 rounded-e-full"></img> 
@@ -26,7 +29,14 @@ function Header({showMiniHeader = false, onCartClick , toggleCustomPizza, }){
                                <img className="w-24 cursor-pointer  " onClick={ onCartClick } src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPgoJPGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2Utd2lkdGg9IjEuNSI+CgkJPHBhdGggZmlsbD0iYmxhY2siIGQ9Ik0xOS41IDIyYTEuNSAxLjUgMCAxIDAgMC0zYTEuNSAxLjUgMCAwIDAgMCAzbS0xMCAwYTEuNSAxLjUgMCAxIDAgMC0zYTEuNSAxLjUgMCAwIDAgMCAzIiAvPgoJCTxwYXRoIGQ9Ik0xNi41IDRIMjJsLTIgMTFoLTQuNW0xLTExbC0xIDExbTEtMTFoLTUuNzVtNC43NSAxMWgtNG0tLjc1LTExSDVsMiAxMWg0LjVtLS43NS0xMWwuNzUgMTFNNSA0Yy0uMTY3LS42NjctMS0yLTMtMm0xOCAxM0g1LjIzYy0xLjc4NCAwLTIuNzMuNzgxLTIuNzMgMnMuOTQ2IDIgMi43MyAySDE5LjUiIC8+Cgk8L2c+Cjwvc3ZnPg=="  alt="addto cart icon"></img>
                            </div>
                 )}
-     
+                { showMiniHeader2 && (
+                    <div className="bg-black h-12 flex flex-row justify-around p-1 text-white font-bold">
+                        <span>Inventory</span>
+                        <span> Order Status</span>
+                        <span>Notifications</span>
+                    </div>
+                ) }
+   
             </header>
      
             
