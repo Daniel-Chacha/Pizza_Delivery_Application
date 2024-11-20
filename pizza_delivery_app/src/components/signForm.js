@@ -2,30 +2,38 @@ import React, {useState} from "react";
 import { useNavigate } from "react-router-dom";
 import { SignBtn } from "./sign_btn";
 import Btn from "./btn";
-import GoogleAuth1 from "./Auth/firebaseAuth";
-import {GoogleAuth2} from  "./Auth/firebaseAuth";
+import googleAuth1 from "./Auth/firebaseAuth";
+import {googleAuth2} from  "./Auth/firebaseAuth";
 import { signInAuth } from "./Auth/firebaseAuth";
 import { signUpAuth1 } from "./Auth/firebaseAuth";
 // import { signUpAuth2 } from "./Auth/firebaseAuth";
 
 export default function SignForm(  {formTitle,  ask ,showRepeatPassword}){
     const navigate = useNavigate()
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
+    const [fname, setFname] = useState("");
+    const [lname, setLname] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const [repeatPassword, setRepeatPassword ]= useState("")
 
     const Authenticate= () =>{
         try{
+            console.log("Starting")
             if(password === repeatPassword){
-                if (showRepeatPassword === true){           //signing up manually
-                    GoogleAuth2(email, password)
-                    
+                if (showRepeatPassword === true){ 
+                    console.log("Sent to requests.js")          //signing up manually
+                    googleAuth2(fname, lname ,email, password)
+                    console.log("Finish1")
+                    navigate("/dashboard")
                 }else{
                     signInAuth(email, password)             //signing in manually
                     navigate("/dashboard");
                 }
                 
+            }else{
+                console.error("passwords not similar.")
             }
+            
         }catch(error){
             console.error("An error occurred", error)
         }
@@ -35,8 +43,8 @@ export default function SignForm(  {formTitle,  ask ,showRepeatPassword}){
     const googleAuthentication =() =>{
         try{
             if (showRepeatPassword === true){   //signing up with google 
-                GoogleAuth1()
-                
+                googleAuth1()
+                navigate("/dashboard")
             }else{                              //signing in with google
                 signUpAuth1()
                 navigate("/dashboard");
@@ -50,7 +58,9 @@ export default function SignForm(  {formTitle,  ask ,showRepeatPassword}){
 
     const handleSubmit =(e) =>{
         e.preventDefault()
+        console.log("Form submitted")
         Authenticate()
+        console.log("Authenticated")
     }
    
     //redirect function for  Sign Up  botton click
@@ -98,7 +108,15 @@ export default function SignForm(  {formTitle,  ask ,showRepeatPassword}){
                 <p  className="text-center">OR</p>
 
                 <div className="flex  items-center  justify-center">
-                    <form  className="items-center p-8 rounded-lg  w-full  max-w-md " onSubmit={(e) =>handleSubmit(e)}>
+                    <form  className="items-center p-8 rounded-lg  w-full  max-w-md " onSubmit={handleSubmit}>
+                        {showRepeatPassword && (
+                            <>
+                        <label className=" text-gray-700  " htmlFor="fname">First Name:</label>
+                        <input onChange={(e) =>setFname(e.target.value)} className=" border border-gray-300 rounded lg:ml-14 mb-5 max-sm:w-50  max-sm:ml-1  sm:ml-16" type="text" id="fname" required autoComplete="True"></input>  <br></br>
+                        <label className=" text-gray-700  " htmlFor="lname">Last Name:</label>
+                        <input onChange={(e) =>setLname(e.target.value)} className=" border border-gray-300 rounded lg:ml-14 mb-5 max-sm:w-50  max-sm:ml-1  sm:ml-16" type="text" id="lname" required autoComplete="True"></input>  <br></br>
+                            </>
+                        )}
                         <label className=" text-gray-700  " htmlFor="email">Email:</label>
                         <input onChange={(e) =>setEmail(e.target.value)} className=" border border-gray-300 rounded lg:ml-24 mb-5 max-sm:w-50  max-sm:ml-1  sm:ml-16" type="email" id="email" required autoComplete="True"></input>  <br></br>
 
