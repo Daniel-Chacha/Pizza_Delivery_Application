@@ -12,57 +12,35 @@ app.use(express.json());
 app.use(cors());
 
 const mongoURI = process.env.DATABASE_URL ;
-
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-// const client = new MongoClient(uri, {
-//   serverApi: {
-//     version: ServerApiVersion.v1,
-//     strict: true,
-//     deprecationErrors: true,
-//   }
-// });
-
-// async function run() {
-//   try {
-//     // Connect the client to the server	(optional starting in v4.7)
-//     await client.connect();
-//     // Send a ping to confirm a successful connection
-//     await client.db("admin").command({ ping: 1 });
-//     console.log("Pinged your deployment. You successfully connected to MongoDB!");
-//   } finally {
-//     // Ensures that the client will close when you finish/error
-//     await client.close();
-//   }
-// }
-// run().catch(console.dir);
-
-//connect to Mongodb
-// let database;
-// client.connect()
-//     .then(()=>{
-//         database = client.db("PizzaDelivery")
-//         console.log("Connected to MongoDb Atlas!")
-//     })
-//     .catch((error) =>{
-//         console.error("Error connecting to MondoDb", error);
-//     })
-
+// const mongoURI ="mongodb://localhost:27017/PizzaInn_db"
 //connect to the MongoDB Atlas
 mongoose.connect(mongoURI)
     .then( () =>console.log("Connected to MongoDB  Atlas") )
-    .catch((err) => {"Error connecting to MondoDB Atlas:", err});
+    .catch((err) =>console.error("Error connecting to MondoDB Atlas:", err));
+
+const db =mongoose.connection;
+
+//connection events
+// db.on('connected', () =>{
+//     console.log('Connected to MongoDb successfully');
+// })
+
+// db.on('error', (err) =>{
+//     console.error('MongoDb connection error', err);
+// })
 
 //Use mongoose schema
 const userSchema = new mongoose.Schema({
-    fname: {type: String, required:true},
-    lname: {type: String, required:true},
-    email: {type: String, required:true},
+    fname: {type: String, required:true ,minlength: 2},
+    lname: {type: String, required:true, minlength: 2},
+    email: {type: String, required:true ,unique: true },
     profilePikUrl: {type: String, required:true},
     joinedAt: {type: Date, default:Date.now },  //automatically sets the current date and time
 });
 
-// const User= mongoose.model('Users', userSchema); //will create the collection if it doesn't exist
+const User= mongoose.model('Users', userSchema); //will create the collection if it doesn't exist
 
+mongoose.set("debug", true);
 
 //POST endpoint to create a save user data
 app.post('/signup', async(req, res) =>{
