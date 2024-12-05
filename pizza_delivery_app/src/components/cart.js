@@ -25,7 +25,7 @@ export default  function Cart( {orders, toggleCart} ){
                             </div>
                         )) }
                     
-                        <p><strong>Flavour</strong>   {order.flavor}</p>
+                        {/* <p><strong>Flavour</strong>   {order.flavor}</p> */}
                         <p  className="text-green-600 font-bold">TOTAL PRICE:Ksh {order.totalPrice}</p>
                     </div>
                     ))

@@ -1,12 +1,14 @@
 
-import React, {useState }from "react"
+import React, {useEffect, useState }from "react"
 import Btn from "./btn"
+import Counter from "./counter";
 
 export default function PizzaCard({ pizza , onAddToCart } ){
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [selectedSizes, setSelectedSizes] =useState([]);
     const [quantity, setQuantity]  = useState([1]);
-    const [flavor, setFlavor]  = useState("");
+    // const [flavor, setFlavor]  = useState("");
+ 
 
     //open modal if atleast one of the sizes s selected
     const openModal = () =>{
@@ -33,7 +35,7 @@ export default function PizzaCard({ pizza , onAddToCart } ){
 
     //Calculate total price based on selected sizes and quantity
     const calculateTotalPrice = () =>{
-        return  selectedSizes.reduce((total,  size) => total +size.prize  *  quantity, 0);
+        return  selectedSizes.reduce((total,  size) => total +size.price  *  quantity, 0);
     }
 
     const handleAddToCart = () =>{
@@ -41,16 +43,18 @@ export default function PizzaCard({ pizza , onAddToCart } ){
             category :pizza.category,
             sizes:  selectedSizes,
             quantity:  quantity,
-            flavor: flavor,
+            // flavor: flavor,
             totalPrice:  calculateTotalPrice()
         };
 
         //call the onAddToCart  function to add this item to the orders lis t in Dashboard
         onAddToCart((prevOrders) =>[...prevOrders  ,orderItems]);
         setSelectedSizes([]);
-        setFlavor("");
+        // setFlavor("");
         closeModal()
     };
+
+
     return(
         <>
             <div className=" items-center p-5 m-5 rounded-lg shadown-md bg-white w-72">
@@ -64,7 +68,7 @@ export default function PizzaCard({ pizza , onAddToCart } ){
                         <div key={size.id} className="flex justify-between   bg-slate-100 rounded  shadown-md">
                             <input type="checkbox"  className="form-checkbox h-4 w-4 text-blue-600" value={size.id}  onChange={() => handleSizeChange(size)}  checked={selectedSizes.includes(size)}></input>
                             <span > {size.level  ?   `${size.level} (${size.diameter }  cm)`  :   "Size Not Specified"} </span>
-                            <span  className="text-green-600 font-semibold">Ksh { size.prize } </span>
+                            <span  className="text-green-600 font-semibold">Ksh { size.price } </span>
                         </div>
                     )) }
                 </div>
@@ -91,7 +95,7 @@ export default function PizzaCard({ pizza , onAddToCart } ){
                         </label>
 
                         {/* Flavor Selector */}
-                        <label className="block mb-4">
+                        {/* <label className="block mb-4">
                             Flavor:
                             <select
                                 value={flavor}
@@ -104,7 +108,7 @@ export default function PizzaCard({ pizza , onAddToCart } ){
                                     <option value="Salty">Salty</option>
                                     <option value="Pepper">Pepper</option>
                             </select>
-                        </label>
+                        </label> */}
 
                         {/* Selected Sizes Display */}
                         <div className="mb-4">
@@ -115,6 +119,7 @@ export default function PizzaCard({ pizza , onAddToCart } ){
                                         <span>
                                             {size.level ? `${size.level} (${size.diameter || size.radius} cm)` : "Size Not Specified"}
                                         </span>
+                                        <Counter />
                                         <span>Ksh {size.prize}</span>
                                     </li>
                                 ))}

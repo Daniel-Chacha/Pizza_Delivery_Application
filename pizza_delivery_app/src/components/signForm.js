@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import { SignBtn } from "./sign_btn";
 import Btn from "./btn";
@@ -6,7 +6,7 @@ import googleAuth1 from "./Auth/firebaseAuth";
 import {googleAuth2} from  "./Auth/firebaseAuth";
 import { signInAuth } from "./Auth/firebaseAuth";
 import { signUpAuth1 } from "./Auth/firebaseAuth";
-// import { signUpAuth2 } from "./Auth/firebaseAuth";
+import { UserContext } from "../userContext";
 
 export default function SignForm(  {formTitle,  ask ,showRepeatPassword}){
     const navigate = useNavigate()
@@ -15,39 +15,62 @@ export default function SignForm(  {formTitle,  ask ,showRepeatPassword}){
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [repeatPassword, setRepeatPassword ]= useState("")
+    const [passwordError, setPasswordError] = useState("");
+    // const {setUserId} = useContext(UserContext);   //Get the setUserId function from context
+
+    let userCredential ;
 
     const Authenticate= () =>{
         try{
             console.log("Starting")
-            if(password === repeatPassword){
-                if (showRepeatPassword === true){ 
+
+            if (showRepeatPassword === true){ 
+                if (password === repeatPassword){
                     console.log("Sent to requests.js")          //signing up manually
                     googleAuth2(fname, lname ,email, password)
-                    console.log("Finish1")
-                    navigate("/dashboard")
+                        .then((credential) =>{
+                            console.log("Credentials:", credential);
+                            console.log("Finish1")
+                            userCredential= credential ;
+                            if(userCredential){navigate("/dashboard")}
+                        })
                 }else{
-                    signInAuth(email, password)             //signing in manually
-                    navigate("/dashboard");
+                    console.error("passwords not similar")
+                    setPasswordError("Passwords not similar")
                 }
-                
             }else{
-                console.error("passwords not similar.")
+                signInAuth(email, password)             //signing in manually
+                    .then((credential) =>{
+                        console.log("Credentials:", credential);
+                        console.log("Finish2")
+                        userCredential= credential ;
+                        if(userCredential){navigate("/dashboard")}
+                    })
             }
-            
         }catch(error){
             console.error("An error occurred", error)
         }
-
     }
 
     const googleAuthentication =() =>{
         try{
             if (showRepeatPassword === true){   //signing up with google 
                 googleAuth1()
-                navigate("/dashboard")
+                    .then((credential) =>{
+                        console.log("Credentials:", credential);
+                        console.log("Finish3")
+                        userCredential= credential ;
+                        if(userCredential){navigate("/dashboard")}
+                    })
+               
             }else{                              //signing in with google
                 signUpAuth1()
-                navigate("/dashboard");
+                    .then((credential) =>{
+                        console.log("Finish4")
+                        console.log("Credentials:", credential);
+                        userCredential= credential ;
+                        if(userCredential){navigate("/dashboard")}
+                    })
             }
                 
           
@@ -130,6 +153,7 @@ export default function SignForm(  {formTitle,  ask ,showRepeatPassword}){
                             </>
                         ) }
 
+                        <p className="text-red-600 font-bold">{passwordError}</p>
                         <Btn name={formTitle} type="submit" />
                     </form>
 
