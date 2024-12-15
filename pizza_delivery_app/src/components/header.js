@@ -3,7 +3,7 @@ import Btn from "./btn";
 
 
 
-function Header({showMiniHeader = false, onCartClick , toggleCustomPizza, showMiniHeader2=false , onNotificationClick, onInventoryClick,  onOrderStatusClick, }){
+function Header({showMiniHeader = false, onCartClick , toggleCustomPizza, showMiniHeader2=false , onNotificationClick, onInventoryClick,  onOrderStatusClick, showProfile=false}){
     
     return(
         <>
@@ -18,7 +18,10 @@ function Header({showMiniHeader = false, onCartClick , toggleCustomPizza, showMi
                     ) } */}
                     
                     </div>
-                    <img src="placeholder.com" alt="logo" className="basis-1/8 ml-10 rounded-e-full"></img> 
+                    {showProfile && (
+                        <img src="placeholder.com" alt="logo" className="basis-1/8 ml-10 rounded-e-full"></img> 
+                    )}
+                    
                 </div>
                 {showMiniHeader  && (
                             <div className="bg-white h-12 flex flex-row justify-around p-1">

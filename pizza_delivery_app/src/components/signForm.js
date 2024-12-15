@@ -16,7 +16,7 @@ export default function SignForm(  {formTitle,  ask ,showRepeatPassword}){
     const [password, setPassword] = useState("");
     const [repeatPassword, setRepeatPassword ]= useState("")
     const [passwordError, setPasswordError] = useState("");
-    const {userId ,setUserId} = useContext(UserContext);   //Get the setUserId function from context
+    const {userDetails, setUserDetails} = useContext(UserContext);   //Get the setUserId function from context
 
     // let userCredential ;
 
@@ -31,9 +31,16 @@ export default function SignForm(  {formTitle,  ask ,showRepeatPassword}){
                     console.log("Credentials:", credential);
 
                     if(credential && credential.user._id){
-                        setUserId(credential.user._id)  //set the userId
-                        console.log("USER ID", credential.user._id);
-                        navigate('/dashboard');
+                        // setUserDetails({
+                        //     userId:credential.user._id,
+                        //     email: credential.user.email,
+                        //     fname: credential.user.fname,
+                        //     lname: credential.user.lname,
+                        //     profilePikUrl: credential.user.profilePikUrl
+                        // })  //set the userId
+                        // console.log("USER ID", credential.user._id);
+                        // navigate('/dashboard');
+                        placeToContextState(credential.user)
                     }else{
                         console.error("Failed to retrieve user ID from credentials: ", credential)
                     }
@@ -46,9 +53,10 @@ export default function SignForm(  {formTitle,  ask ,showRepeatPassword}){
                 console.log("Credentials:", credential);
 
                 if(credential && credential._id){
-                    setUserId(credential._id)  //set the userId
-                    console.log("USER ID", credential._id);
-                    navigate('/dashboard');
+                    // setUserId(credential._id)  //set the userId
+                    // console.log("USER ID", credential._id);
+                    // navigate('/dashboard');
+                    placeToContextState(credential)
                 }else{
                     console.error("Failed to retrieve user ID from credentials: ", credential)
                 }
@@ -65,9 +73,10 @@ export default function SignForm(  {formTitle,  ask ,showRepeatPassword}){
                 console.log("Credentials:", credential);
 
                 if(credential && credential.user._id){
-                    setUserId(credential.user._id)  //set the userId
-                    console.log("USER ID", credential._id);
-                    navigate('/dashboard');
+                    // setUserId(credential.user._id)  //set the userId
+                    // console.log("USER ID", credential._id);
+                    // navigate('/dashboard');
+                    placeToContextState(credential.user);
                 }else{
                     console.error("Failed to retrieve user ID from credentials: ", credential)
                 }
@@ -77,9 +86,10 @@ export default function SignForm(  {formTitle,  ask ,showRepeatPassword}){
                 console.log("Credentials:", credential);
 
                 if(credential && credential._id){
-                    setUserId(credential._id)  //set the userId
-                    console.log("USER ID", credential._id);
-                    navigate('/dashboard');
+                    // setUserId(credential._id)  //set the userId
+                    // console.log("USER ID", credential._id);
+                    // navigate('/dashboard');
+                    placeToContextState(credential);
                 }else{
                     console.error("Failed to retrieve user ID from credentials: ", credential)
                 }
@@ -89,6 +99,18 @@ export default function SignForm(  {formTitle,  ask ,showRepeatPassword}){
         }catch(error){
             console.error("An error occurred", error)
         }
+    }
+
+    const placeToContextState =( creds)=>{
+        setUserDetails({
+            userId:creds._id,
+            email: creds.email,
+            fname: creds.fname,
+            lname: creds.lname,
+            profilePikUrl:creds.profilePikUrl
+        })  //set the userId
+        console.log("USER ID", userDetails);
+        navigate('/dashboard');
     }
 
     const handleSubmit =(e) =>{

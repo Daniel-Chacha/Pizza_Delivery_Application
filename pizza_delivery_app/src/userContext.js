@@ -5,10 +5,16 @@ export const UserContext =createContext();
 
 //create  a provider component
 export const UserProvider= ({children}) =>{
-    const [userId, setUserId] = useState(null) // hold the user's id in state
+    const [userDetails, setUserDetails] = useState({
+        userId: null,
+        email: "",
+        fname: "",
+        lname: "",
+        profilePikUrl: "",
+    }); // hold the user's id in state
 
     return(
-        <UserContext.Provider value={{userId, setUserId}}>
+        <UserContext.Provider value={{userDetails, setUserDetails}}>
             {children}
         </UserContext.Provider>
     )
