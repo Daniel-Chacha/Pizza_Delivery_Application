@@ -11,8 +11,9 @@ export const SaveUserDetails = async(fname, lname, email, profilePikUrl) => {
         };
 
         const response = await axios.post('http://localhost:4000/signup', userData);
+        // alert(response.data.message)
 
-        console.log("User successfully saved", response.data);
+        console.log( response.data.message, response.data.user);
         // setUserId(response._id)
       
         return(response.data)
@@ -26,14 +27,10 @@ export const SaveUserDetails = async(fname, lname, email, profilePikUrl) => {
 export const FetchUserDetails = async(email) =>{
     // const {setUserId} =useContext(UserContext);
     try{
-        const response= await axios.post("http://localhost:4000/api/get-user-details", {email});
+        const response= await axios.get(`http://localhost:4000/api/get-user-details?email=${encodeURIComponent(email)}`);
         return response.data;
 
-        // if (response.ok){
-        //     setUserId(response._id) // update the user id state with the id
-        // }else{
-        //     alert(response.error);  //show an error message if the user is not found.
-        // }
+
     }catch(error){
         console.error("Error fetching user Details: ", error);
     }

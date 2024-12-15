@@ -18,67 +18,71 @@ export default function SignForm(  {formTitle,  ask ,showRepeatPassword}){
     const [passwordError, setPasswordError] = useState("");
     const {userId ,setUserId} = useContext(UserContext);   //Get the setUserId function from context
 
-    let userCredential ;
+    // let userCredential ;
 
-    const Authenticate= () =>{
+    const Authenticate= async() =>{
         try{
             console.log("Starting")
 
             if (showRepeatPassword === true){ 
                 if (password === repeatPassword){
                     console.log("Sent to requests.js")          //signing up manually
-                    googleAuth2(fname, lname ,email, password)
-                        .then((credential) =>{
-                            console.log("Credentials:", credential);
-                            console.log("Finish1")
-                            setUserId(credential._id);
-                            console.log('USER ID', userId);
-                            userCredential= credential ;
-                            if(userCredential){navigate("/dashboard")}
-                        })
+                    const credential =await googleAuth2(fname, lname ,email, password)
+                    console.log("Credentials:", credential);
+
+                    if(credential && credential.user._id){
+                        setUserId(credential.user._id)  //set the userId
+                        console.log("USER ID", credential.user._id);
+                        navigate('/dashboard');
+                    }else{
+                        console.error("Failed to retrieve user ID from credentials: ", credential)
+                    }
                 }else{
                     console.error("passwords not similar")
                     setPasswordError("Passwords not similar")
                 }
             }else{
-                signInAuth(email, password)             //signing in manually
-                    .then((credential) =>{
-                        console.log("Credentials:", credential);
-                        console.log("Finish2")
-                        setUserId(credential._id);
-                        console.log('USER ID', userId);
-                        userCredential= credential ;
-                        if(userCredential){navigate("/dashboard")}
-                    })
+                const credential=await signInAuth(email, password)             //signing in manually
+                console.log("Credentials:", credential);
+
+                if(credential && credential._id){
+                    setUserId(credential._id)  //set the userId
+                    console.log("USER ID", credential._id);
+                    navigate('/dashboard');
+                }else{
+                    console.error("Failed to retrieve user ID from credentials: ", credential)
+                }
             }
         }catch(error){
             console.error("An error occurred", error)
         }
     }
 
-    const googleAuthentication =() =>{
+    const googleAuthentication =async() =>{
         try{
             if (showRepeatPassword === true){   //signing up with google 
-                googleAuth1()
-                    .then((credential) =>{
-                        console.log("Credentials:", credential);
-                        console.log("Finish3")
-                        setUserId(credential._id);
-                        console.log('USER ID', userId);
-                        userCredential= credential ;
-                        if(userCredential){navigate("/dashboard")}
-                    })
+                const credential =await googleAuth1()
+                console.log("Credentials:", credential);
+
+                if(credential && credential.user._id){
+                    setUserId(credential.user._id)  //set the userId
+                    console.log("USER ID", credential._id);
+                    navigate('/dashboard');
+                }else{
+                    console.error("Failed to retrieve user ID from credentials: ", credential)
+                }
                
             }else{                              //signing in with google
-                signUpAuth1()
-                    .then((credential) =>{
-                        console.log("Finish4")
-                        console.log("Credentials:", credential);
-                        setUserId(credential._id);
-                        console.log('USER ID', userId);
-                        userCredential= credential ;
-                        if(userCredential){navigate("/dashboard")}
-                    })
+                const credential =await signUpAuth1()
+                console.log("Credentials:", credential);
+
+                if(credential && credential._id){
+                    setUserId(credential._id)  //set the userId
+                    console.log("USER ID", credential._id);
+                    navigate('/dashboard');
+                }else{
+                    console.error("Failed to retrieve user ID from credentials: ", credential)
+                }
             }
                 
           
