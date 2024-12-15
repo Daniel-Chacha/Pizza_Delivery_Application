@@ -20,8 +20,8 @@ export default  function Cart( {orders, toggleCart} ){
                             <div key={idx} >
                                 <p className="bg-slate-200">Level: {size.level}</p>
                                 <p className="bg-slate-200">Diameter: {size.diameter} cm</p>
-                                <p className="bg-slate-200">Quantity {order.quantity} </p>
-                                <p className="text-green-600 font-semibold"> Ksh {size.prize}</p>
+                                <p className="bg-slate-200">Quantity {order.quantities[idx]} </p>
+                                <p className="text-green-600 font-semibold"> Ksh {order.prices[idx]}</p>
                             </div>
                         )) }
                     

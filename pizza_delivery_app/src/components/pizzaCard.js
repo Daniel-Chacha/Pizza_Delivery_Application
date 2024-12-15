@@ -6,16 +6,45 @@ import Counter from "./counter";
 export default function PizzaCard({ pizza , onAddToCart } ){
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [selectedSizes, setSelectedSizes] =useState([]);
-    const [quantity, setQuantity]  = useState([1]);
-    // const [flavor, setFlavor]  = useState("");
- 
+    const [quantities, setQuantities]  = useState( Array(selectedSizes.length).fill(1) ); //State to manage quantities for each size .Initialize with zeros   
+    const [prices, setPrices] =useState([])
 
-    //open modal if atleast one of the sizes s selected
+    // Sync quantities with selected sizes
+    useEffect(() => {
+        setQuantities((prev) => {
+            // const newQuantities = Array(selectedSizes.length).fill(1); // Default to 1
+            // return prev.map((qty, index) => newQuantities[index] ?? qty); // Retain existing values
+            // console.log("Selected Sizes:", selectedSizes);
+            // return selectedSizes.map((size, index) => prev[index] ?? 1);
+            // const newQuantities = Array(selectedSizes.length).fill(1);
+            return selectedSizes.map((_, index) => prev[index] ?? 1); // Preserve previous quantities
+        });
+    }, [selectedSizes]);
+
+    // Define the updateQuantity function here
+    const updateQuantity = (index, newCount) => {
+        if(typeof newCount !== "number"){
+            console.error("Invalid value for newCount: ", newCount);
+            return;
+        }
+        setQuantities((prev) =>
+            prev.map((qty, i) => (i === index ? newCount : qty))        
+        );
+        // console.log("Quantities:", quantities);
+    }; 
+
+    //useEffect to calculate prices whenever 'selectedPrices' or 'quantities ' change
+    useEffect(() =>{
+        const calculatedPrices = selectedSizes.map((size, index) => size.price * quantities[index]);
+        setPrices(calculatedPrices);
+    }, [selectedSizes, quantities]);  // dependencies
+
+    //open modal if atleast one of the sizes  selected
     const openModal = () =>{
         if (selectedSizes.length  > 0){
             setIsModalOpen(true);
         }else {
-            alert("Please select atleast one size")
+            alert("Please select at least one size")
         }
     };
 
@@ -35,18 +64,19 @@ export default function PizzaCard({ pizza , onAddToCart } ){
 
     //Calculate total price based on selected sizes and quantity
     const calculateTotalPrice = () =>{
-        return  selectedSizes.reduce((total,  size) => total +size.price  *  quantity, 0);
+        return  selectedSizes.reduce((total,  size, index) => total +size.price  *  quantities[index], 0);
     }
 
     const handleAddToCart = () =>{
         const orderItems ={
             category :pizza.category,
             sizes:  selectedSizes,
-            quantity:  quantity,
+            quantities:  quantities,
             // flavor: flavor,
+            prices: prices,
             totalPrice:  calculateTotalPrice()
         };
-
+        console.log("The Order: ", orderItems)
         //call the onAddToCart  function to add this item to the orders lis t in Dashboard
         onAddToCart((prevOrders) =>[...prevOrders  ,orderItems]);
         setSelectedSizes([]);
@@ -79,48 +109,23 @@ export default function PizzaCard({ pizza , onAddToCart } ){
                             {/* Modal Popup */}
                 {isModalOpen && (
                 <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
-                    <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+                    <div className="bg-white p-6 rounded-lg shadow-lg w-1/2">
                         <h2 className="text-xl font-bold mb-4 text-center text-green-600 underline underline-offset-2">YOUR PIZZA</h2>
-
-                        {/* Quantity Selector */}
-                        <label className="block mb-2">
-                            Quantity:
-                            <input
-                                type="number"
-                                value={quantity}
-                                onChange={(e) => setQuantity(parseInt(e.target.value))}
-                                className="ml-2 border rounded w-16 text-center"
-                                min="1"
-                            />
-                        </label>
-
-                        {/* Flavor Selector */}
-                        {/* <label className="block mb-4">
-                            Flavor:
-                            <select
-                                value={flavor}
-                                onChange={(e) => setFlavor(e.target.value)}
-                                className="ml-2 border rounded w-full"
-                                placeholder="Enter flavor"
-                                required>
-                                    <option value="">Select Flavor</option>
-                                    <option value="Normal">Normal</option>
-                                    <option value="Salty">Salty</option>
-                                    <option value="Pepper">Pepper</option>
-                            </select>
-                        </label> */}
 
                         {/* Selected Sizes Display */}
                         <div className="mb-4">
                             <h3 className="text-lg font-semibold mb-2">Selected Sizes:</h3>
                             <ul>
-                                {selectedSizes.map((size) => (
+                                {selectedSizes.map((size,index) => (
                                     <li key={size.id} className="flex justify-between">
                                         <span>
                                             {size.level ? `${size.level} (${size.diameter || size.radius} cm)` : "Size Not Specified"}
                                         </span>
-                                        <Counter />
-                                        <span>Ksh {size.prize}</span>
+                                        <p className="mt-2">
+                                        <Counter count={quantities[index]} setCount={(newCount) => updateQuantity(index, newCount)} />
+                                        </p>
+                                        
+                                        <span>Ksh {prices[index]}</span>
                                     </li>
                                 ))}
                             </ul>

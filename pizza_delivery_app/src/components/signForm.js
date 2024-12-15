@@ -16,7 +16,7 @@ export default function SignForm(  {formTitle,  ask ,showRepeatPassword}){
     const [password, setPassword] = useState("");
     const [repeatPassword, setRepeatPassword ]= useState("")
     const [passwordError, setPasswordError] = useState("");
-    // const {setUserId} = useContext(UserContext);   //Get the setUserId function from context
+    const {userId ,setUserId} = useContext(UserContext);   //Get the setUserId function from context
 
     let userCredential ;
 
@@ -31,6 +31,8 @@ export default function SignForm(  {formTitle,  ask ,showRepeatPassword}){
                         .then((credential) =>{
                             console.log("Credentials:", credential);
                             console.log("Finish1")
+                            setUserId(credential._id);
+                            console.log('USER ID', userId);
                             userCredential= credential ;
                             if(userCredential){navigate("/dashboard")}
                         })
@@ -43,6 +45,8 @@ export default function SignForm(  {formTitle,  ask ,showRepeatPassword}){
                     .then((credential) =>{
                         console.log("Credentials:", credential);
                         console.log("Finish2")
+                        setUserId(credential._id);
+                        console.log('USER ID', userId);
                         userCredential= credential ;
                         if(userCredential){navigate("/dashboard")}
                     })
@@ -59,6 +63,8 @@ export default function SignForm(  {formTitle,  ask ,showRepeatPassword}){
                     .then((credential) =>{
                         console.log("Credentials:", credential);
                         console.log("Finish3")
+                        setUserId(credential._id);
+                        console.log('USER ID', userId);
                         userCredential= credential ;
                         if(userCredential){navigate("/dashboard")}
                     })
@@ -68,6 +74,8 @@ export default function SignForm(  {formTitle,  ask ,showRepeatPassword}){
                     .then((credential) =>{
                         console.log("Finish4")
                         console.log("Credentials:", credential);
+                        setUserId(credential._id);
+                        console.log('USER ID', userId);
                         userCredential= credential ;
                         if(userCredential){navigate("/dashboard")}
                     })

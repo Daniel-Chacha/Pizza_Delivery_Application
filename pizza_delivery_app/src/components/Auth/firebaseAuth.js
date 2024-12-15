@@ -4,6 +4,7 @@ import { initializeApp } from "firebase/app";
 import firebaseConfig from "../../firebaseConfig";
 import { getAuth, GoogleAuthProvider, signInWithPopup,signInWithEmailAndPassword, createUserWithEmailAndPassword ,signOut} from "firebase/auth";
 import { SaveUserDetails } from "../../Requests/requests";
+import { FetchUserDetails } from "../../Requests/requests";
 
 // import firebase from "firebase/compat/app";
 
@@ -40,7 +41,9 @@ export  function googleAuth2 (fname, lname, email, password) {  //Sign up with e
 export async function signUpAuth1(){
     //sign in with google
     const result = await signInWithPopup(auth, provider);
-    const user= result.user; 
+    // const user= result.user; 
+    const email = result.user.email;
+    const user =FetchUserDetails(email);
     return user
     
 }
@@ -58,7 +61,8 @@ export async function signUpAuth2(fname, lname,email, password){
 export async function signInAuth(email, password){
     try{
         const result = await signInWithEmailAndPassword(auth, email, password);
-        const user = result.user;
+        // const user = result.user;
+        const user =FetchUserDetails(email);
         return user ;
     }catch(error){
         handleFirebaseAuthError(error);
