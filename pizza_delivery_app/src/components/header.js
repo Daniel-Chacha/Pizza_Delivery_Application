@@ -1,10 +1,34 @@
 
 import Btn from "./btn";
-
+import { useState,useEffect, useRef, useContext } from "react";
+import { UserContext } from "../userContext";
 
 
 function Header({showMiniHeader = false, onCartClick , toggleCustomPizza, showMiniHeader2=false , onNotificationClick, onInventoryClick,  onOrderStatusClick, showProfile=false}){
+    const {userDetails} = useContext(UserContext);
+    const [isOpen, setIsOpen] = useState(false);
+    const dropDownRef = useRef(null);
+
+    userDetails.userId ? showProfile=true : showProfile=false ;  //check whether user details are in the context, and set showProfile to true
     
+    //Toggle dropdown visibility
+    const toggleDropdown =() =>{
+        setIsOpen((prev) =>!prev);
+    }
+
+    //close the  dropdown after clicking outside
+    useEffect(() =>{
+        const handleClickOutside =(event) =>{
+            if(dropDownRef.current && !dropDownRef.current.contains(event.target)){
+                setIsOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+
+        return() =>{
+            document.removeEventListener("mousedown", handleClickOutside);
+        }
+    },[]);
     return(
         <>
             <header className="fixed top-0 left-0 w-full z-10 ">
@@ -19,7 +43,22 @@ function Header({showMiniHeader = false, onCartClick , toggleCustomPizza, showMi
                     
                     </div>
                     {showProfile && (
-                        <img src="placeholder.com" alt="logo" className="basis-1/8 ml-10 rounded-e-full"></img> 
+                        <div className="relative inline-block text-left" ref={dropDownRef}>
+                            <img src={userDetails.profilePikUrl} alt="profile " className="basis-1/8 ml-10 rounded-e-full w-12" onClick={toggleDropdown}></img> 
+
+                            {/* dropdown menu */}
+                            {isOpen && (
+                                <div className="absolute right-0 mt-2 w-48 bg-white border-gray-200 rounded-md shadow-lg z-10">
+                                    <ul className="py-1">
+                                        <li className="px-4 py-2 hover:bg-gray-100 text-gray-700 cursor-pointer ">{userDetails.fname}  {userDetails.lname}</li>
+                                        <li className="px-4 py-2 hover:bg-gray-100 text-gray-700 cursor-pointer ">{userDetails.email}</li>
+                                        <li className="px-4 py-2 hover:bg-gray-100 text-gray-700 cursor-pointer ">Settings</li>
+                                        <li className="px-4 py-2 hover:bg-gray-100 text-gray-700 cursor-pointer ">Log Out</li>
+                                    </ul>
+                                </div>
+                            )}
+                        </div>
+                        
                     )}
                     
                 </div>

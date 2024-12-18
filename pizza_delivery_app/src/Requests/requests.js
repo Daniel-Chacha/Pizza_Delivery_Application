@@ -2,6 +2,8 @@ import axios from "axios";
 // import { UserContext  } from "../userContext";
 // import { useContext } from "react";
 
+
+//Function to send registration data to the backend for saving to database
 export const SaveUserDetails = async(fname, lname, email, profilePikUrl) => {
     // const {userId,setUserId} = useContext(UserContext);
     try{
@@ -24,6 +26,7 @@ export const SaveUserDetails = async(fname, lname, email, profilePikUrl) => {
     }
 }
 
+//Function for fetching user data from the backend
 export const FetchUserDetails = async(email) =>{
     // const {setUserId} =useContext(UserContext);
     try{
@@ -36,12 +39,30 @@ export const FetchUserDetails = async(email) =>{
     }
 }
 
-// export const getPizzaDetails =async() =>{
-//     try{
-//         const response = await axios.post('http://localhost:4000/signup');
-//         return(response);
-//     }catch(error){
-//         console.error("Error retrieving ready pizza details from the server ", error);
+
+//Function for saving pizzas addded to cart to the database.
+export const SaveToCart = async(orderItems) =>{
+    try{
+        const response= await axios.post("http://localhost:4000/api/add-to-cart",orderItems )
+        console.log("ORDER ITEMS: ", orderItems);
+        return response;
+    }catch(error){
+        console.error("Error saving details to Cart", error);
+        throw error;
+    }
+}
+
+//Function for fetching data in the Cart collection
+export const FetchCartData = async(userId) =>{
+    try{
         
-//     }
-// }
+        const id= encodeURIComponent(userId);
+        console.log("User Id in Cart: ",id, userId);
+        const response = await axios.get(`http://localhost:4000/api/get-user-cart-data?userId=${id}`);
+        console.log("The Cart details are: ",response.data);
+        return response.data;
+        
+    }catch(error){
+        console.error("Internal server error. ", error);
+    }
+}

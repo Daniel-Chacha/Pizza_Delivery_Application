@@ -1,13 +1,16 @@
 
-import React, {useEffect, useState }from "react"
+import React, {useEffect, useState,useContext }from "react"
 import Btn from "./btn"
 import Counter from "./counter";
+import { UserContext } from "../userContext";
+import { SaveToCart } from "../Requests/requests";
 
 export default function PizzaCard({ pizza , onAddToCart } ){
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [selectedSizes, setSelectedSizes] =useState([]);
     const [quantities, setQuantities]  = useState( Array(selectedSizes.length).fill(1) ); //State to manage quantities for each size .Initialize with zeros   
     const [prices, setPrices] =useState([])
+    const {userDetails} =useContext(UserContext);
 
     // Sync quantities with selected sizes
     useEffect(() => {
@@ -64,21 +67,28 @@ export default function PizzaCard({ pizza , onAddToCart } ){
 
     //Calculate total price based on selected sizes and quantity
     const calculateTotalPrice = () =>{
-        return  selectedSizes.reduce((total,  size, index) => total +size.price  *  quantities[index], 0);
+        return  selectedSizes.reduce((total,  size, index) => total + size.price  *  quantities[index], 0);
     }
 
-    const handleAddToCart = () =>{
+    const handleAddToCart = async() =>{
         const orderItems ={
             category :pizza.category,
             sizes:  selectedSizes,
             quantities:  quantities,
             // flavor: flavor,
             prices: prices,
-            totalPrice:  calculateTotalPrice()
+            totalPrice:  calculateTotalPrice(),
+            userId: userDetails.userId,
         };
-        console.log("The Order: ", orderItems)
-        //call the onAddToCart  function to add this item to the orders lis t in Dashboard
-        onAddToCart((prevOrders) =>[...prevOrders  ,orderItems]);
+        console.log("THE ORDER: ", orderItems)
+        //call the onAddToCart  function to add this item to the orders list in Dashboard
+        try{
+            const response =await SaveToCart(orderItems);
+            console.log("Saving to Cart Response: ", response);
+        }catch(err){
+            console.error("Could not save to cart: ", err);
+        }
+        // onAddToCart((prevOrders) =>[...prevOrders  ,orderItems]);
         setSelectedSizes([]);
         // setFlavor("");
         closeModal()
@@ -121,9 +131,9 @@ export default function PizzaCard({ pizza , onAddToCart } ){
                                         <span>
                                             {size.level ? `${size.level} (${size.diameter || size.radius} cm)` : "Size Not Specified"}
                                         </span>
-                                        <p className="mt-2">
+                                        <div className="mt-2">
                                         <Counter count={quantities[index]} setCount={(newCount) => updateQuantity(index, newCount)} />
-                                        </p>
+                                        </div>
                                         
                                         <span>Ksh {prices[index]}</span>
                                     </li>

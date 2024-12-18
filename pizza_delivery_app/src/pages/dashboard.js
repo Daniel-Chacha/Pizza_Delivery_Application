@@ -1,22 +1,26 @@
-import  React,{ useState, useEffect }  from "react";
+import  React,{ useState, useEffect, useContext }  from "react";
 import Header from "../components/header";
 import Footer from "../components/footer";
 import PizzaCard  from "../components/pizzaCard";
 // import { PizzaData } from "../components/data";
 import Cart from "../components/cart";
 import CustomPizza from "../components/customPizza";
-
+import { FetchCartData } from "../Requests/requests";
+import { UserContext } from "../userContext";
 
 export default function Dashboard(){
     const [pizzaData, setPizzaData] =useState([]);
+
     // state to control custom  pizza  visibility
-    const [showCustomPizza, setShowCustomPizza]  =useState(false);
+    const [showCustomPizza, setShowCustomPizza]  = useState(false);
 
     //state to control the cart visibility
     const [cartVisible,  setCartVisible] = useState(false)
 
     //state to hold selected orders
     const [orders, setOrders] = useState([])
+
+    const {userDetails} =useContext(UserContext);   //context state that has user registration details
 
     //function to toggle  cart visibility
     const toggleCart = () =>{
@@ -40,6 +44,24 @@ export default function Dashboard(){
         };
         fetchPizzas();
     },[])
+    
+    useEffect(() =>{
+        if (!userDetails?.userId) {
+            console.warn("User ID is not available");
+            return; // Exit if userId is not defined
+        }
+
+        //load cart data from the backend
+        const loadCartData = async() =>{
+            try{
+                const data = await FetchCartData(userDetails.userId);
+                setOrders(data);
+            }catch(error){
+                console.error("Error loading Cart data: ", error);
+            }
+        };
+        loadCartData();
+    }, [userDetails?.userId]);
 
     return(
         <>
@@ -58,7 +80,7 @@ export default function Dashboard(){
                         </div>
                     }
 
-                    {/*Conditionaluu render CustomPizza modal */}
+                    {/*Conditional render CustomPizza modal */}
                     {showCustomPizza && (
                         <CustomPizza onClose={toggleCustomPizza} />
                     )}

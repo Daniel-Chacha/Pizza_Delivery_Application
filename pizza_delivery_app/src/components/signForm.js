@@ -77,6 +77,7 @@ export default function SignForm(  {formTitle,  ask ,showRepeatPassword}){
                     // console.log("USER ID", credential._id);
                     // navigate('/dashboard');
                     placeToContextState(credential.user);
+                    console.log("CREDENTIALS: ", credential.user);
                 }else{
                     console.error("Failed to retrieve user ID from credentials: ", credential)
                 }
@@ -101,7 +102,7 @@ export default function SignForm(  {formTitle,  ask ,showRepeatPassword}){
         }
     }
 
-    const placeToContextState =( creds)=>{
+    const placeToContextState =(creds)=>{
         setUserDetails({
             userId:creds._id,
             email: creds.email,

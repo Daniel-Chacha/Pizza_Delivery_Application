@@ -13,15 +13,16 @@ export default  function Cart( {orders, toggleCart} ){
                 
                 { orders.length > 0 ? (
                     orders.map((order , index)  =>(
-                        <div className="mb-4"  key={index}>
-                        <p className="text-center text-lg  text-red-500 underline underline-offset-2  font-bold">{order.category} </p>
+                    <div className="mb-4"  key={index}>
+                        <p className="text-center text-lg  text-red-500 underline underline-offset-2  font-bold">{order.pizzas[0].name} </p>
                         <p><strong>Sizes</strong> </p>
-                        { Object.values(order.sizes).map((size, idx) =>(
+                        {/* { Object.values(order.sizes).map((size, idx) =>( */}
+                        { order.pizzas[0].sizes.map((size, idx) =>(
                             <div key={idx} >
                                 <p className="bg-slate-200">Level: {size.level}</p>
                                 <p className="bg-slate-200">Diameter: {size.diameter} cm</p>
-                                <p className="bg-slate-200">Quantity {order.quantities[idx]} </p>
-                                <p className="text-green-600 font-semibold"> Ksh {order.prices[idx]}</p>
+                                <p className="bg-slate-200">Quantity {size.quantity} </p>
+                                <p className="text-green-600 font-semibold"> Ksh {size.price}</p>
                             </div>
                         )) }
                     
