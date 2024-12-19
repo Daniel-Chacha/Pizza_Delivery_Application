@@ -8,8 +8,10 @@ const cors = require('cors')
 const AutoIncrement = require('mongoose-sequence')(mongoose);
 const multer = require('multer');
 const path = require('path');
+// const { initWebSocket, broadcastUpdate } = require('./websocket') //import websocket functions
 
 const Order =require('./models')  //import the order model
+const Cart = require('./models')
 
 dotenv.config()
 app.use(express.json());
@@ -104,16 +106,19 @@ app.post("/save-ready-pizza", async(req, res) =>{
         // const newPizza =new readyPizza({category, description, quantity, url, sizes})
         const newPizza= new readyPizza(req.body);
 
-        await newPizza.save();
+        const savedPizza = await newPizza.save();
+
+        //notify websocket clients  about the new order
+        //broadcastUpdate({event: "New Pizza", data:savedPizza});
 
         //send a success response
         res.status(201).json({
             message: 'Pizza saved successfully',
-            pizza: newPizza
+            pizza: savedPizza
         })
     }catch(error){
         console.error("Error saving the Pizza details", error);
-        res.status(500).json({message: 'An error occurred while saving Pizza Details', error})
+        res.status(500).json({error: 'An error occurred while saving Pizza Details', error})
     }
 })
 
@@ -127,8 +132,8 @@ app.get("/api/pizzas", async(req, res) =>{
     }
 })
 
-app.get("/api/get-user-id", async(req, res) =>{
-    const {email} = req.body;
+app.get("/api/get-user-details", async(req, res) =>{
+    const {email} = req.query;
 
     if (!email){
         return res.status(400).json({ error: "Email is required" });
@@ -136,21 +141,57 @@ app.get("/api/get-user-id", async(req, res) =>{
 
     try{
         //find the user by email
-        const user= await Users.findOne({email});
+        const user= await User.findOne({email});
 
         if(!user){
             return res.status(404).json({error: "User not found"});
         }else{
-            res.json({userId: user})
+            res.json(user)
         }
     }catch(error){
-        console.error("Error retrieving user details", error)
+        console.error("Error retrieving user detailss", error)
         res.status(500).json({error: "Internal Server Error"});
     }
 })
 
 app.post("/api/add-to-cart", async(req, res) =>{
+    try{
+        const {category, sizes, quantities,prices,totalPrice,userId} = req.body;
+        
+        if(!category || !sizes || !quantities || !prices || !totalPrice || !userId){
+        	return res.status(400).json({error: "Missing required fields"});
+        }
+        
+        const formattedSizes = sizes.map((size, index) =>{
+        	if(!size.level || !size.diameter){
+        		throw new Error("Invalid size structure");
+        	}
+        	return {
+        		level: size.level,
+        		diameter: size.diameter,
+        		quantity: quantities[index],
+        		price :prices[index],
+        	};
+        });
 
+        const newCart =new Cart({
+            pizzas:
+            {           
+            	name:category,
+            	sizes: formattedSizes,
+            },
+            
+            totalPrice,
+            userId
+        })
+
+        const savedCart = await newCart.save()  //save to the database
+
+        res.status(201).json(savedCart)
+    }catch(error){
+        console.error("Error saving order; ", error);
+        res.status(500).json({error: "Internal server error "})
+    }
 })
 
 app.get('/api/orders', async(req, res) =>{
@@ -169,6 +210,35 @@ app.get('/api/orders', async(req, res) =>{
         res.status(500).json({error: "Internal server error "})
     }
 })
+
+app.get("/api/get-user-cart-data", async(req,res) =>{
+	const {userId} = req.query;
+	
+	if(!userId){
+		res.status(400).json({error: "UserId is required"})
+	};
+	
+	try{
+	//Find all the cart entries for the user
+	const details =await Cart.find({userId}).sort({ addedOn: -1 })   //Sort by the most recent
+	
+	if(!details || details.length === 0){
+		return res.status(404).json({message: "No Items added to Cart yet. "})
+	}else{
+		res.status(200).json(details);
+	}	
+	
+	}catch(error){
+		console.error("Error fetching cart details: ", error);
+		res.status(500).json({error: "Internal Server Error"});
+	}
+})
+
+//create http server
+// const server =http.createserver(app)
+
+//initialize websocker server
+// initWebSocket(server);
 
 app.listen(4000, () =>{
     console.log("Server is running at port 4000");

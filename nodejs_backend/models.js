@@ -11,7 +11,6 @@ const sizeSchema =new mongoose.Schema({
 const PizzaSchema =new mongoose.Schema({
     name: {type: String, required: true},
     sizes: {type: [sizeSchema], required: true},
-    flavour: {type: String, required: true}
 });
 
 const OrderSchema= new mongoose.Schema({
@@ -34,4 +33,5 @@ const CartSchema = new mongoose.Schema({
 CartSchema.index({userId:1, addedOn:-1})
 const Cart =mongoose.model("Cart", CartSchema);
 
-module.exports =Order, Cart;
+module.exports =Order;
+module.exports =Cart;
