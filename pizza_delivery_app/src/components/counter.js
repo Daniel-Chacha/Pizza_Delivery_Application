@@ -13,7 +13,7 @@ const Counter = ({count, setCount}) =>{
             <Btn name="-" onClick={decrement} aria-label="Decrease item count"  />
 
             {/* counter value */}
-            <span className="text-sm text-gray-500"> {count} " Item(s)"</span>
+            <span className="text-sm text-blue-500 font-semibold"> {count} " Item(s)"</span>
 
             {/* increment button */}
             <Btn name="+" onClick={increment} aria-label="Decrease item count"  />

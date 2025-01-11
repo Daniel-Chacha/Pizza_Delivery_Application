@@ -8,18 +8,13 @@ import { SaveToCart } from "../Requests/requests";
 export default function PizzaCard({ pizza , onAddToCart } ){
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [selectedSizes, setSelectedSizes] =useState([]);
-    const [quantities, setQuantities]  = useState( Array(selectedSizes.length).fill(1) ); //State to manage quantities for each size .Initialize with zeros   
+    const [quantities, setQuantities]  = useState( Array(selectedSizes.length).fill(1)); //State to manage quantities for each size .Initialize with zeros   
     const [prices, setPrices] =useState([])
     const {userDetails} =useContext(UserContext);
 
     // Sync quantities with selected sizes
     useEffect(() => {
         setQuantities((prev) => {
-            // const newQuantities = Array(selectedSizes.length).fill(1); // Default to 1
-            // return prev.map((qty, index) => newQuantities[index] ?? qty); // Retain existing values
-            // console.log("Selected Sizes:", selectedSizes);
-            // return selectedSizes.map((size, index) => prev[index] ?? 1);
-            // const newQuantities = Array(selectedSizes.length).fill(1);
             return selectedSizes.map((_, index) => prev[index] ?? 1); // Preserve previous quantities
         });
     }, [selectedSizes]);
@@ -36,7 +31,7 @@ export default function PizzaCard({ pizza , onAddToCart } ){
         // console.log("Quantities:", quantities);
     }; 
 
-    //useEffect to calculate prices whenever 'selectedPrices' or 'quantities ' change
+    //useEffect to calculate prices whenever 'selectedSizes' or 'quantities ' change
     useEffect(() =>{
         const calculatedPrices = selectedSizes.map((size, index) => size.price * quantities[index]);
         setPrices(calculatedPrices);

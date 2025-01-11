@@ -39,6 +39,15 @@ export const FetchUserDetails = async(email) =>{
     }
 }
 
+//fetch pizza details from the backend to display at the dashboard
+export const FetchPizzas = async() =>{
+    try{
+        const data =await axios.get("http://localhost:4000/api/pizzas");
+        return data;
+    }catch(error){
+        console.error("Error getting pizza details from the backend: ", error);
+    }
+}
 
 //Function for saving pizzas addded to cart to the database.
 export const SaveToCart = async(orderItems) =>{
