@@ -5,7 +5,8 @@
     import { UserContext } from "../userContext";
     import { SaveToCart } from "../Requests/requests";
 
-    export default function CustomPizza( { isOpen, onClose } ){
+
+    export default function CustomPizza( { isOpen, onClose , reFetchCartData} ){
         const [step, setStep] = useState(1);
         const [customization,  setCustomization]  = useState({
             base: null,
@@ -149,30 +150,6 @@
             }
         }, [customization])
 
-        //useEffect to calculate total prices whenever quantities and selected sizes changes change.
-        // useEffect(() => {
-        //     const calculatedPrices = selectedSizes.map((size) => {
-        //         const count = quantities[size] || 1;
-        //         const price = getIngredientsTotal()[size] || 0;
-        //         return count * price;
-        //     });
-        //     setPrices(calculatedPrices);
-        // }, [selectedSizes, quantities, getIngredientsTotal]);
-        
-        // useEffect(() =>{
-        //     console.log("SELECTED SIZES: ", selectedSizes)
-        //     console.log("QUANTITIES: ", quantities)
-        // }, [quantities, selectedSizes]);
-        
-
-        // console.log(quantities[selectedSizes.indexOf('small')])
-        // const getTotalPrice= () =>{
-        //     const total =selectedSizes.reduce((sum, size) => sum + getIngredientsTotal()[size] * quantities[size], 0);
-
-        //     setTotalPrice(total);
-        //     console.log("Total Price: ", total)
-        // };
-
         useEffect(() =>{
             // const total =selectedSizes.reduce((sum, size) => sum + getIngredientsTotal()[size] * quantities[size], 0);
             setPrices(selectedSizes.map((size) =>(getIngredientsTotal()[size]) * quantities[size]))
@@ -187,7 +164,8 @@
         const  formatted_sizes = selectedSizes.map((sizes) =>(
             {
                 level: sizes,
-                diameter: sizes === 'small' ? "15 cm" : sizes === 'medium' ? "30cm" : sizes === 'large' ? "45 cm" : "50 cm" ,
+                diameter: sizes === 'small' ? 15 : sizes === 'medium' ? 30 : sizes === 'large' ? 45 : 50 ,
+              
             }
         ))
 
@@ -195,7 +173,7 @@
             const orderItems ={
                 category: "Customized Pizza",
                 sizes: formatted_sizes,
-                quantities: quantities,
+                quantities: Object.values(quantities),
                 prices: prices,
                 totalPrice: totalPrice,
                 userId: userDetails.userId
@@ -204,9 +182,13 @@
         try{
             const response =await SaveToCart(orderItems);
             console.log("Saving to Cart Response: ", response);
+            reFetchCartData()
+            onClose()
         }catch(err){
             console.error("Could not save to cart: ", err);
+            alert("An error occurred")
         }
+        
         }
         return(
             <>

@@ -1,7 +1,7 @@
 import Btn from "./btn"
 
 
-export default  function Cart( {orders, toggleCart} ){
+export default  function Cart( {orders, toggleCart } ){
     //calculating the grandtotal by summing up each order's total price
     const grandTotal =orders.reduce((sum, order) => sum + order.totalPrice, 0);
     return(
@@ -22,12 +22,12 @@ export default  function Cart( {orders, toggleCart} ){
                                 <p className="bg-slate-200">Level: {size.level}</p>
                                 <p className="bg-slate-200">Diameter: {size.diameter} cm</p>
                                 <p className="bg-slate-200">Quantity {size.quantity} </p>
-                                <p className="text-green-600 font-semibold"> Ksh {size.price}</p>
+                                <p className="text-green-600 font-semibold "> Ksh {size.price}</p>
                             </div>
                         )) }
                     
                         {/* <p><strong>Flavour</strong>   {order.flavor}</p> */}
-                        <p  className="text-green-600 font-bold">TOTAL PRICE:Ksh {order.totalPrice}</p>
+                        <p  className="text-blue-600 font-bold text-center">TOTAL :Ksh {order.totalPrice}</p>
                     </div>
                     ))
                 )  :(

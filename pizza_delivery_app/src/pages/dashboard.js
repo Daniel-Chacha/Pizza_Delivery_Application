@@ -45,7 +45,7 @@ export default function Dashboard(){
         fetchPizzas();
     },[])
     
-    useEffect(() =>{
+    const getCartData = () =>{
         if (!userDetails?.userId) {
             console.warn("User ID is not available");
             return; // Exit if userId is not defined
@@ -61,28 +61,33 @@ export default function Dashboard(){
             }
         };
         loadCartData();
-    }, [userDetails?.userId]);
+    };
+
+    // Call getCartData only once when the component mounts
+    useEffect(() => {
+        getCartData();
+    }, []);
 
     return(
         <>
             <div  className="pt-32 bg-fixed  bg-[url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYSxwaTqPTsKXjuhO5hvcC3d4mgEqx7sC5SA&s')] ">
-                <Header showMiniHeader={true} onCartClick ={toggleCart}  toggleCustomPizza={toggleCustomPizza}/>
+                <Header showMiniHeader={true} onCartClick ={toggleCart}  toggleCustomPizza={toggleCustomPizza}  />
                 {/* <div className="flex flex-row "> */}
                     <div className="flex flex-row  flex-wrap justify-center">
                         { pizzaData.map((pizza)  =>(
-                            <PizzaCard key={pizza.Id}  pizza={pizza}  onAddToCart={setOrders} />
+                            <PizzaCard key={pizza.Id}  pizza={pizza}  onAddToCart={setOrders} reFetchCartData={getCartData} />
                         )) }
                     </div>
                     {/*Conditionally render the Cart Component*/}
                     {cartVisible  &&
                         <div className="fixed right-0 top-32 z-20  h-96  overflow-auto  ">
-                            <Cart orders={orders}  toggleCart={toggleCart}/>
+                            <Cart orders={orders}  toggleCart={toggleCart}  />
                         </div>
                     }
 
                     {/*Conditional render CustomPizza modal */}
                     {showCustomPizza && (
-                        <CustomPizza onClose={toggleCustomPizza} />
+                        <CustomPizza onClose={toggleCustomPizza} reFetchCartData={getCartData} />
                     )}
                 <Footer />
             </div>

@@ -4,8 +4,9 @@ import Btn from "./btn"
 import Counter from "./counter";
 import { UserContext } from "../userContext";
 import { SaveToCart } from "../Requests/requests";
+import { FetchCartData } from "../Requests/requests";
 
-export default function PizzaCard({ pizza , onAddToCart } ){
+export default function PizzaCard({ pizza , onAddToCart ,reFetchCartData} ){
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [selectedSizes, setSelectedSizes] =useState([]);
     const [quantities, setQuantities]  = useState( Array(selectedSizes.length).fill(1)); //State to manage quantities for each size .Initialize with zeros   
@@ -86,6 +87,7 @@ export default function PizzaCard({ pizza , onAddToCart } ){
         // onAddToCart((prevOrders) =>[...prevOrders  ,orderItems]);
         setSelectedSizes([]);
         // setFlavor("");
+        reFetchCartData()
         closeModal()
     };
 
