@@ -11,3 +11,45 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* slanted divider on the right*/
+.slanted-divider{
+  background: white;
+  width: 100%;
+  height: 100%;
+  clip-path: polygon(45% 0, 100% 0, 100% 100%, 55% 100%);
+  position: absolute;
+  /* z-index: -1; */
+}
+
+/* card animation with the card sliding from left and displaying to the right */
+@keyframes slideInOut {
+  0%{
+    transform: translateX(0%) ; 
+    /* opacity: 0; */
+  }
+  20%{
+    transform: translateY(0) ;   
+   
+  }
+  60%{
+    transform: translateY(0) ;  
+  }
+  100%{
+      transform: translateX(-500%);    
+     
+  }
+}
+
+/*apply the animation*/
+.animate-card{
+  animation: slideInOut 10s infinite ;
+}
+
+.card{
+  position: absolute;
+  top: 10%;
+  left: 60%;        /*ensure it appears on the left side*/
+  transform: translate(-50%, -50%);
+ 
+}

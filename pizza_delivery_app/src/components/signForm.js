@@ -31,15 +31,6 @@ export default function SignForm(  {formTitle,  ask ,showRepeatPassword}){
                     console.log("Credentials:", credential);
 
                     if(credential && credential.user._id){
-                        // setUserDetails({
-                        //     userId:credential.user._id,
-                        //     email: credential.user.email,
-                        //     fname: credential.user.fname,
-                        //     lname: credential.user.lname,
-                        //     profilePikUrl: credential.user.profilePikUrl
-                        // })  //set the userId
-                        // console.log("USER ID", credential.user._id);
-                        // navigate('/dashboard');
                         placeToContextState(credential.user)
                     }else{
                         console.error("Failed to retrieve user ID from credentials: ", credential)
@@ -53,9 +44,6 @@ export default function SignForm(  {formTitle,  ask ,showRepeatPassword}){
                 console.log("Credentials:", credential);
 
                 if(credential && credential._id){
-                    // setUserId(credential._id)  //set the userId
-                    // console.log("USER ID", credential._id);
-                    // navigate('/dashboard');
                     placeToContextState(credential)
                 }else{
                     console.error("Failed to retrieve user ID from credentials: ", credential)
@@ -73,9 +61,6 @@ export default function SignForm(  {formTitle,  ask ,showRepeatPassword}){
                 console.log("Credentials:", credential);
 
                 if(credential && credential.user._id){
-                    // setUserId(credential.user._id)  //set the userId
-                    // console.log("USER ID", credential._id);
-                    // navigate('/dashboard');
                     placeToContextState(credential.user);
                     console.log("CREDENTIALS: ", credential.user);
                 }else{
@@ -87,9 +72,6 @@ export default function SignForm(  {formTitle,  ask ,showRepeatPassword}){
                 console.log("Credentials:", credential);
 
                 if(credential && credential._id){
-                    // setUserId(credential._id)  //set the userId
-                    // console.log("USER ID", credential._id);
-                    // navigate('/dashboard');
                     placeToContextState(credential);
                 }else{
                     console.error("Failed to retrieve user ID from credentials: ", credential)
@@ -102,17 +84,39 @@ export default function SignForm(  {formTitle,  ask ,showRepeatPassword}){
         }
     }
 
+    const placeToSessionStorage= (creds) =>{
+        sessionStorage.setItem('UserCredentials',JSON.stringify
+            ({
+                userId:creds._id,
+                email: creds.email,
+                fname: creds.fname,
+                lname: creds.lname,
+                profilePikUrl:creds.profilePikUrl
+            })
+        )
+    }
+
+
     const placeToContextState =(creds)=>{
-        setUserDetails({
-            userId:creds._id,
-            email: creds.email,
-            fname: creds.fname,
-            lname: creds.lname,
-            profilePikUrl:creds.profilePikUrl
-        })  //set the userId
-        console.log("USER ID", userDetails);
+        placeToSessionStorage(creds);       //place the user details to session storage 
+        const storedDetails =JSON.parse(sessionStorage.getItem('UserCredentials'))    //retrieve user details from session storage and place to context state
+        console.log('Session storage', storedDetails)
+        if(storedDetails)           //check if data exist before setting state
+        {setUserDetails({
+            userId:storedDetails.userId,
+            email: storedDetails.email,
+            fname: storedDetails.fname,
+            lname: storedDetails.lname,
+            profilePikUrl:storedDetails.profilePikUrl
+        }) 
+ 
+        console.log("USER Details", userDetails);
         navigate('/dashboard');
     }
+    }
+
+
+    
 
     const handleSubmit =(e) =>{
         e.preventDefault()

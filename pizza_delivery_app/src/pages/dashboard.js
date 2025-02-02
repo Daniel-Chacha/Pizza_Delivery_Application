@@ -20,7 +20,7 @@ export default function Dashboard(){
     //state to hold selected orders
     const [orders, setOrders] = useState([])
 
-    const {userDetails} =useContext(UserContext);   //context state that has user registration details
+    const {userDetails, setUserDetails} = useContext(UserContext);  //context state that has user registration details
 
     //function to toggle  cart visibility
     const toggleCart = () =>{
@@ -67,6 +67,25 @@ export default function Dashboard(){
     useEffect(() => {
         getCartData();
     }, []);
+
+    //use effect to place user details into state context incase a user reloads
+    useEffect(() => {
+        const storedDetails = JSON.parse(sessionStorage.getItem('UserCredentials'));
+    
+        console.log('Session storage', storedDetails);
+    
+        if (storedDetails) {  //Check if data exists before setting state
+            setUserDetails({
+                userId: storedDetails.userId,
+                email: storedDetails.email,
+                fname: storedDetails.fname,
+                lname: storedDetails.lname,
+                profilePikUrl: storedDetails.profilePikUrl
+            });
+        }
+        getCartData()
+    }, []);  
+        
 
     return(
         <>

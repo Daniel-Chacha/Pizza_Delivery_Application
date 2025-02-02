@@ -5,13 +5,12 @@ import firebaseConfig from "../../firebaseConfig";
 import { getAuth, GoogleAuthProvider, signInWithPopup,signInWithEmailAndPassword, createUserWithEmailAndPassword ,signOut} from "firebase/auth";
 import { SaveUserDetails } from "../../Requests/requests";
 import { FetchUserDetails } from "../../Requests/requests";
-
+// import { useNavigate } from "react-router-dom";
 // import firebase from "firebase/compat/app";
 
 initializeApp(firebaseConfig);
 const auth = getAuth();
 const provider =new GoogleAuthProvider();
-
 
 export default async function googleAuth1(){    //Sign up with google and route to the dashboard
     try{
@@ -122,15 +121,6 @@ async function verifyAndSave(fname,lname, email,profilePikUrl){
     console.log("User Details:", fname, lname, email, profilePikUrl)
 }
 
-
-export const logoutUser = async () => {
-    try {
-      await signOut(auth);
-      console.log("User logged out");
-    } catch (error) {
-      console.error("Error logging out:", error.message);
-    }
-  };
 
 
 function handleFirebaseAuthError(error){
