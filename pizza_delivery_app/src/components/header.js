@@ -63,7 +63,7 @@ function Header({showMiniHeader = false, onCartClick , toggleCustomPizza, showMi
                     {/* <img src="/public/pizzaInnlogo.png" alt="logo" className="basis-1/8 ml-10 rounded-e-full "></img> */}
 
                     <div className="relative  w-1/2  basis-3/4 ml-6 ">
-                        <h1 className="text-7xl font-bold  text-white text-center max-[640px]:text-5xl " >Pizza Inn</h1>
+                        <h1 className="text-7xl font-bold  text-white text-center max-[640px]:text-5xl pacifico-regular" >Pizza Inn</h1>
 
                         {!showProfile && (
                             <div className="absolute right-0 top-5 flex gap-5 justify-center">
