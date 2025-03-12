@@ -6,7 +6,7 @@ import { SignBtn } from "./sign_btn";
 import { useNavigate } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
 
-function Header({showMiniHeader = false, onCartClick , toggleCustomPizza, showMiniHeader2=false , onNotificationClick, onInventoryClick,  onOrderStatusClick, showProfile=false} ){
+function Header({showMiniHeader = false, onCartClick , toggleCustomPizza, showMiniHeader2=false , onNotificationClick, onInventoryClick,  onOrderStatusClick, showProfile=false, background_color='bg-red-800' ,underline = false } ){
     const {userDetails, setUserDetails} = useContext(UserContext);
     const [isOpen, setIsOpen] = useState(false);
     const dropDownRef = useRef(null);
@@ -59,14 +59,14 @@ function Header({showMiniHeader = false, onCartClick , toggleCustomPizza, showMi
     return(
         <>
             <header className="fixed top-0 left-0 w-full z-10 ">
-                <div className="h-16  bg-red-800 flex flex-row space-x-4 justify-center  items-center">
+                <div className={`h-16  ${background_color} flex flex-row space-x-4 justify-center  items-center`}>
                     {/* <img src="/public/pizzaInnlogo.png" alt="logo" className="basis-1/8 ml-10 rounded-e-full "></img> */}
 
                     <div className="relative  w-1/2  basis-3/4 ml-6 ">
-                        <h1 className="text-7xl font-bold  text-white text-center max-[640px]:text-5xl pacifico-regular" >Pizza Inn</h1>
+                        <h1 className={`text-7xl font-bold  ${underline ? "underline underline-offset-[10px] decoration-2 decoration-dashed" : ""}  text-white text-center max-[640px]:text-5xl pacifico-regular`} >Pizza Inn</h1>
 
                         {!showProfile && (
-                            <div className="absolute right-0 top-5 flex gap-5 justify-center">
+                            <div className="hidden sm:block absolute right-0 top-5  gap-5 justify-center">
                                 <SignBtn onClick={(event) => handleSignClick(event,  "/signup")} btnName="Sign Up"  />
                                 <SignBtn onClick={(event) => handleSignClick(event,  "/signin")} btnName= "Sign In"/>
                             </div>
