@@ -8,7 +8,7 @@ const cors = require('cors')
 const AutoIncrement = require('mongoose-sequence')(mongoose);
 const multer = require('multer');
 const path = require('path');
-// const { initWebSocket, broadcastUpdate } = require('./websocket') //import websocket functions
+
 
 const Order =require('./models')  //import the order model
 const Cart = require('./models')
@@ -108,9 +108,6 @@ app.post("/save-ready-pizza", async(req, res) =>{
 
         const savedPizza = await newPizza.save();
 
-        //notify websocket clients  about the new order
-        //broadcastUpdate({event: "New Pizza", data:savedPizza});
-
         //send a success response
         res.status(201).json({
             message: 'Pizza saved successfully',
@@ -172,7 +169,7 @@ app.post("/api/add-to-cart", async(req, res) =>{
         		quantity: quantities[index],
         		price :prices[index],
         	};
-        });
+        })
 
         const newCart =new Cart({
             pizzas:
@@ -234,11 +231,6 @@ app.get("/api/get-user-cart-data", async(req,res) =>{
 	}
 })
 
-//create http server
-// const server =http.createserver(app)
-
-//initialize websocker server
-// initWebSocket(server);
 
 app.listen(4000, () =>{
     console.log("Server is running at port 4000");
