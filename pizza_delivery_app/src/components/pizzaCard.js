@@ -5,6 +5,7 @@ import Counter from "./counter";
 import { UserContext } from "../userContext";
 import { SaveToCart } from "../Requests/requests";
 import { FetchCartData } from "../Requests/requests";
+import { ErrorPopUp } from "./errorPoPup";
 
 export default function PizzaCard({ pizza , onAddToCart ,reFetchCartData} ){
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -12,6 +13,8 @@ export default function PizzaCard({ pizza , onAddToCart ,reFetchCartData} ){
     const [quantities, setQuantities]  = useState( Array(selectedSizes.length).fill(1)); //State to manage quantities for each size .Initialize with zeros   
     const [prices, setPrices] =useState([])
     const {userDetails} =useContext(UserContext);
+    const [isErrorPopUpOpen, setIsErrorPopUpOpen] = useState(false);
+    const [errorPopUpContent, setErrorPopUpContent] = useState([]);
 
     // Sync quantities with selected sizes
     useEffect(() => {
@@ -38,12 +41,26 @@ export default function PizzaCard({ pizza , onAddToCart ,reFetchCartData} ){
         setPrices(calculatedPrices);
     }, [selectedSizes, quantities]);  // dependencies
 
+    //check if user is signed In, if not, they have to sign in before adding items to cart
+    const checkSignInAddToCart = () =>{
+        if (!userDetails?.userId){
+            setIsErrorPopUpOpen(true);
+            setErrorPopUpContent() //Clears the state of any previous data
+            setErrorPopUpContent([true, false, "."]);
+        }else{
+            openModal();
+        }
+    }
+
     //open modal if atleast one of the sizes  selected
     const openModal = () =>{
         if (selectedSizes.length  > 0){
             setIsModalOpen(true);
         }else {
-            alert("Please select at least one size")
+            // alert("Please select at least one size")
+            setIsErrorPopUpOpen(true);
+            setErrorPopUpContent() //Clears the state of any previous data
+            setErrorPopUpContent([false, true, "Please select at least one size"]);
         }
     };
 
@@ -110,10 +127,11 @@ export default function PizzaCard({ pizza , onAddToCart ,reFetchCartData} ){
                     )) }
                 </div>
                 <div className="flex justify-center">
-                <Btn name="Add To Cart" onClick={openModal} />
+                <Btn name="Add To Cart" onClick={checkSignInAddToCart} />
                 </div>
+                <ErrorPopUp showSignInUpMessage={errorPopUpContent[0]} showPassedMessage={errorPopUpContent[1]} message={errorPopUpContent[2]} isOpen={isErrorPopUpOpen}  onClose={() => setIsErrorPopUpOpen(false)} />
                 
-                            {/* Modal Popup */}
+                {/* Modal Popup */}
                 {isModalOpen && (
                 <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
                     <div className="bg-white p-6 rounded-lg shadow-lg w-1/2">

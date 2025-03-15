@@ -1,9 +1,17 @@
 import Btn from "./btn"
-
+import { SignBtn } from "./sign_btn";
+import { useNavigate } from "react-router-dom";
 
 export default  function Cart( {orders, toggleCart } ){
     //calculating the grandtotal by summing up each order's total price
     const grandTotal =orders.reduce((sum, order) => sum + order.totalPrice, 0);
+    const navigate = useNavigate();
+    
+    //redirect function for  Sign Up  botton click
+    const handleSignClick =(event  , location) =>{
+        event.preventDefault();
+        navigate(location)
+    }
     return(
         <>
             <div className=" z-20  w-96  bg-white p-12  pt-3 pb-3 shadow-lg rounded-lg  h-fit ">
@@ -31,7 +39,16 @@ export default  function Cart( {orders, toggleCart } ){
                     </div>
                     ))
                 )  :(
-                    <p> No items in the cart .</p>
+                    <p> Please
+                        <span>
+                        <SignBtn onClick={(event) => handleSignClick(event,  "/signin")} btnName= "Sign In"/>
+                        </span> or
+                        
+                        <span>
+                        <SignBtn onClick={(event) => handleSignClick(event,  "/signup")} btnName="Sign Up"  />
+                        </span>
+                        
+                         to be able to view Cart Items.</p>
                 ) }
 
                 <p  className="text-red-500 font-bold text-center"><strong  className="text-2xl">Ksh {grandTotal}</strong></p>

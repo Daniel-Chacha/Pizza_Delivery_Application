@@ -4,6 +4,7 @@
     import { SizeRow } from "./sizeRow";
     import { UserContext } from "../userContext";
     import { SaveToCart } from "../Requests/requests";
+    import { ErrorPopUp } from "./errorPoPup";
 
 
     export default function CustomPizza( { isOpen, onClose , reFetchCartData} ){
@@ -19,7 +20,8 @@
         const [prices, setPrices] =useState([]);
         const [totalPrice, setTotalPrice] =useState(0);
         const {userDetails} =useContext(UserContext);
-        console.log(totalPrice);
+        const [isErrorPopUpOpen, setIsErrorPopUpOpen] = useState(false);
+        // console.log(totalPrice);
 
         //sync quantities with selected sizes
         useEffect(() => {
@@ -94,7 +96,7 @@
                 <div  className="flex  justify-between mt-4">
                     {step > 1  && <Btn name={"Back"}  onClick={prevStep}/>}
                     {step  <5 && <Btn name={"Next"}  onClick={nextStep}/>}
-                    {step === 5 && <Btn name={"Add To Cart"} onClick={pushToCart} />}
+                    {step === 5 && <Btn name={"Add To Cart"} onClick={checkSignInAddToCart} />}
             </div>
             )
         }
@@ -168,6 +170,15 @@
               
             }
         ))
+
+          //check if user is signed In, if not, they have to sign in before adding items to cart
+        const checkSignInAddToCart = () =>{
+            if (!userDetails?.userId){
+                setIsErrorPopUpOpen(true);
+            }else{
+                pushToCart();
+            }
+        }
 
         const pushToCart =async() =>{
             const orderItems ={
@@ -247,6 +258,7 @@
                             </div>
                         )}
                     </div>
+                    <ErrorPopUp isOpen={isErrorPopUpOpen} onClose={() => setIsErrorPopUpOpen(false)} />
                 </div>
             </>
         )

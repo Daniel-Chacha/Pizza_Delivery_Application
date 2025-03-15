@@ -7,6 +7,7 @@ import Cart from "../components/cart";
 import CustomPizza from "../components/customPizza";
 import { FetchCartData } from "../Requests/requests";
 import { UserContext } from "../userContext";
+import { ErrorPopUp } from "../components/errorPoPup";
 
 export default function Dashboard(){
     const [pizzaData, setPizzaData] =useState([]);
@@ -21,6 +22,7 @@ export default function Dashboard(){
     const [orders, setOrders] = useState([])
 
     const {userDetails, setUserDetails} = useContext(UserContext);  //context state that has user registration details
+    const [isErrorPopUpOpen, setIsErrorPopUpOpen] = useState(false);
 
     //function to toggle  cart visibility
     const toggleCart = () =>{
@@ -92,23 +94,32 @@ export default function Dashboard(){
             <div  className="pt-32 bg-fixed  bg-[url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYSxwaTqPTsKXjuhO5hvcC3d4mgEqx7sC5SA&s')] ">
                 <Header showMiniHeader={true} onCartClick ={toggleCart}  toggleCustomPizza={toggleCustomPizza}  />
                 {/* <div className="flex flex-row "> */}
-                    <div className="flex flex-row  flex-wrap justify-center">
-                        { pizzaData.map((pizza)  =>(
-                            <PizzaCard key={pizza.Id}  pizza={pizza}  onAddToCart={setOrders} reFetchCartData={getCartData} />
-                        )) }
-                    </div>
-                    {/*Conditionally render the Cart Component*/}
-                    {cartVisible  &&
-                        <div className="fixed right-0 top-32 z-20  h-96  overflow-auto  ">
-                            <Cart orders={orders}  toggleCart={toggleCart}  />
-                        </div>
-                    }
 
-                    {/*Conditional render CustomPizza modal */}
-                    {showCustomPizza && (
-                        <CustomPizza onClose={toggleCustomPizza} reFetchCartData={getCartData} />
-                    )}
-                <Footer />
+                {!pizzaData ? 
+                    <ErrorPopUp showLoadingIcon={true} isOpen={isErrorPopUpOpen}  onClose={() => setIsErrorPopUpOpen(false)} />
+                    :
+
+                    <div>
+                        <div className="flex flex-row  flex-wrap justify-center">
+                            { pizzaData.map((pizza)  =>(
+                                <PizzaCard key={pizza.Id}  pizza={pizza}  onAddToCart={setOrders} reFetchCartData={getCartData} />
+                            )) }
+                        </div>
+                        {/*Conditionally render the Cart Component*/}
+                        {cartVisible  &&
+                            <div className="fixed right-0 top-32 z-20  h-96  overflow-auto  ">
+                                <Cart orders={orders}  toggleCart={toggleCart}  />
+                            </div>
+                        }
+
+                        {/*Conditional render CustomPizza modal */}
+                        {showCustomPizza && (
+                            <CustomPizza onClose={toggleCustomPizza} reFetchCartData={getCartData} />
+                        )}
+                        <Footer />
+                    </div>
+                }
+
             </div>
         </>
     )
