@@ -21,6 +21,7 @@ app.use(cors({
     credentials: true
 }));
 
+const port = process.env.PORT || 7392
 const mongoURI = process.env.DATABASE_URL ;
 mongoose.connect(mongoURI)
     .then( () =>console.log("Connected to MongoDB  Atlas") )
@@ -234,8 +235,8 @@ app.get("/api/get-user-cart-data", async(req,res) =>{
 })
 
 
-app.listen(process.env.PORT, () =>{
-    console.log("Server is running at port ", process.env.PORT);
+app.listen(port, () =>{
+    console.log("Server is running at port ", port);
 });
 
 
