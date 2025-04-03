@@ -2,10 +2,10 @@ const express = require('express');
 const dotenv = require ('dotenv')
 const app= express()
 const  mongoose  = require('mongoose')
-const bodyParser = require('body-parser');
+// const bodyParser = require('body-parser');
 const cors = require('cors')
 const AutoIncrement = require('mongoose-sequence')(mongoose);
-const multer = require('multer');
+// const multer = require('multer');
 const path = require('path');
 
 
@@ -14,7 +14,12 @@ const Cart = require('./models')
 
 dotenv.config()
 app.use(express.json());
-app.use(cors());
+//  Allow requests from  frontend URL
+app.use(cors({
+    origin: "https://pizzainn.vercel.app",  // frontend domain
+    methods: "GET,POST,PUT,DELETE",
+    credentials: true
+}));
 
 const mongoURI = process.env.DATABASE_URL ;
 mongoose.connect(mongoURI)
