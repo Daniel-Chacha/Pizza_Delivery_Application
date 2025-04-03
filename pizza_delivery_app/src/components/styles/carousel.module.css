@@ -1,5 +1,5 @@
 /* Base carousel styles */
-.carousel {
+/* .carousel {
     position: relative;
     overflow: hidden;
   }
@@ -14,7 +14,7 @@
     position: absolute;
     inset: 0;
     transition: opacity 0.3s;
-  }
+  } */
   
   /* Define the item stacking order */
   .carousel .list .item:nth-child(1) {

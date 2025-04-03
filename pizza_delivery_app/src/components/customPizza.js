@@ -50,8 +50,8 @@
                 [size]: newCount,
             }));
 
-            console.log("SELECTED SIZES: ", selectedSizes)
-            console.log("QUANTITIES: ", quantities)
+            // console.log("SELECTED SIZES: ", selectedSizes)
+            // console.log("QUANTITIES: ", quantities)
         }
         
 
@@ -189,7 +189,7 @@
                 totalPrice: totalPrice,
                 userId: userDetails.userId
             }
-            console.log('CART ITEMS: ',orderItems);
+            // console.log('CART ITEMS: ',orderItems);
         try{
             const response =await SaveToCart(orderItems);
             console.log("Saving to Cart Response: ", response);

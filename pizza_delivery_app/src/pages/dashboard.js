@@ -8,6 +8,7 @@ import CustomPizza from "../components/customPizza";
 import { FetchCartData } from "../Requests/requests";
 import { UserContext } from "../userContext";
 import { ErrorPopUp } from "../components/errorPoPup";
+import { FetchPizzas } from "../Requests/requests";
 
 export default function Dashboard(){
     const [pizzaData, setPizzaData] =useState([]);
@@ -37,8 +38,11 @@ export default function Dashboard(){
         //fetch pizza details from the backend
         const fetchPizzas = async() =>{
             try{
-                const response =await fetch("http://localhost:4000/api/pizzas");
-                const data =await response.json();
+
+                // const response =await fetch("http://localhost:4000/api/pizzas");
+                // const response =await fetch("https://pizza-delivery-backend-59oi.onrender.com/api/pizzas");
+                // const data =await response.json();
+                const data = await FetchPizzas();
                 setPizzaData(data);
             }catch(err){
                 console.error("Error fetching pizzas ", err);

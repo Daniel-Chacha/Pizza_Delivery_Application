@@ -12,7 +12,7 @@ export const SaveUserDetails = async(fname, lname, email, profilePikUrl) => {
             fname,lname,email,profilePikUrl,
         };
 
-        const response = await axios.post('http://localhost:4000/signup', userData);
+        const response = await axios.post('https://pizza-delivery-backend-59oi.onrender.com/signup', userData);
         // alert(response.data.message)
 
         console.log( response.data.message, response.data.user);
@@ -30,7 +30,7 @@ export const SaveUserDetails = async(fname, lname, email, profilePikUrl) => {
 export const FetchUserDetails = async(email) =>{
     // const {setUserId} =useContext(UserContext);
     try{
-        const response= await axios.get(`http://localhost:4000/api/get-user-details?email=${encodeURIComponent(email)}`);
+        const response= await axios.get(`https://pizza-delivery-backend-59oi.onrender.com/api/get-user-details?email=${encodeURIComponent(email)}`);
         return response.data;
 
 
@@ -42,7 +42,7 @@ export const FetchUserDetails = async(email) =>{
 //fetch pizza details from the backend to display at the dashboard
 export const FetchPizzas = async() =>{
     try{
-        const data =await axios.get("http://localhost:4000/api/pizzas");
+        const data =await axios.get("https://pizza-delivery-backend-59oi.onrender.com/api/pizzas");
         return data;
     }catch(error){
         console.error("Error getting pizza details from the backend: ", error);
@@ -52,7 +52,7 @@ export const FetchPizzas = async() =>{
 //Function for saving pizzas addded to cart to the database.
 export const SaveToCart = async(orderItems) =>{
     try{
-        const response= await axios.post("http://localhost:4000/api/add-to-cart",orderItems )
+        const response= await axios.post("https://pizza-delivery-backend-59oi.onrender.com/api/add-to-cart",orderItems )
         console.log("ORDER ITEMS: ", orderItems);
         return response;
     }catch(error){
@@ -67,7 +67,7 @@ export const FetchCartData = async(userId) =>{
         
         const id= encodeURIComponent(userId);
         console.log("User Id in Cart: ",id, userId);
-        const response = await axios.get(`http://localhost:4000/api/get-user-cart-data?userId=${id}`);
+        const response = await axios.get(`https://pizza-delivery-backend-59oi.onrender.com/api/get-user-cart-data?userId=${id}`);
         console.log("The Cart details are: ",response.data);
         return response.data;
         

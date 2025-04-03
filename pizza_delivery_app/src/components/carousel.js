@@ -1,8 +1,5 @@
 import React, {useEffect, useState, useRef} from "react";
 import styles from "./styles/carousel.module.css";
-// import { type } from "@testing-library/user-event/dist/type";
-
-
 
 export const Carousel = ({slideItems, handleSignClick}) =>{
   const carouselRef = useRef(null);
