@@ -230,7 +230,7 @@ app.get("/api/get-user-cart-data", async(req,res) =>{
 
 
 app.listen(process.env.PORT, () =>{
-    console.log("Server is running at port 4000");
+    console.log("Server is running at port ", process.env.PORT);
 });
 
 
