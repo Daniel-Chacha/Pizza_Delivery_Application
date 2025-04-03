@@ -42,7 +42,10 @@ export const FetchUserDetails = async(email) =>{
 //fetch pizza details from the backend to display at the dashboard
 export const FetchPizzas = async() =>{
     try{
-        const data =await axios.get("https://pizza-delivery-backend-59oi.onrender.com/api/pizzas");
+        // const data =await axios.get("https://pizza-delivery-backend-59oi.onrender.com/api/pizzas");
+        // return data;
+        const response =await fetch("https://pizza-delivery-backend-59oi.onrender.com/api/pizzas");
+        const data =await response.json();
         return data;
     }catch(error){
         console.error("Error getting pizza details from the backend: ", error);
