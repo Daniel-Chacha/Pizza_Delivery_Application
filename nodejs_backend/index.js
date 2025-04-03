@@ -1,5 +1,4 @@
 const express = require('express');
-// const { MongoClient, ServerApiVersion } = require('mongodb');
 const dotenv = require ('dotenv')
 const app= express()
 const  mongoose  = require('mongoose')
@@ -18,8 +17,6 @@ app.use(express.json());
 app.use(cors());
 
 const mongoURI = process.env.DATABASE_URL ;
-// const mongoURI ="mongodb://localhost:27017/PizzaInn_db"
-//connect to the MongoDB Atlas
 mongoose.connect(mongoURI)
     .then( () =>console.log("Connected to MongoDB  Atlas") )
     .catch((err) =>console.error("Error connecting to MongoDB Atlas:", err));
@@ -232,7 +229,7 @@ app.get("/api/get-user-cart-data", async(req,res) =>{
 })
 
 
-app.listen(4000, () =>{
+app.listen(process.env.PORT, () =>{
     console.log("Server is running at port 4000");
 });
 
