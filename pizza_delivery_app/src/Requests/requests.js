@@ -56,7 +56,7 @@ export const FetchPizzas = async() =>{
 export const SaveToCart = async(orderItems) =>{
     try{
         const response= await axios.post("https://pizza-delivery-backend-59oi.onrender.com/api/add-to-cart",orderItems )
-        console.log("ORDER ITEMS: ", orderItems);
+        // console.log("ORDER ITEMS: ", orderItems);
         return response;
     }catch(error){
         console.error("Error saving details to Cart", error);
@@ -66,12 +66,11 @@ export const SaveToCart = async(orderItems) =>{
 
 //Function for fetching data in the Cart collection
 export const FetchCartData = async(userId) =>{
-    try{
-        
+    try{        
         const id= encodeURIComponent(userId);
-        console.log("User Id in Cart: ",id, userId);
+        // console.log("User Id in Cart: ",id, userId);
         const response = await axios.get(`https://pizza-delivery-backend-59oi.onrender.com/api/get-user-cart-data?userId=${id}`);
-        console.log("The Cart details are: ",response.data);
+        // console.log("The Cart details are: ",response.data);
         return response.data;
         
     }catch(error){

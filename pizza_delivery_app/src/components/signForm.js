@@ -22,35 +22,38 @@ export default function SignForm(  {formTitle,  ask ,showRepeatPassword}){
 
     const Authenticate= async() =>{
         try{
-            console.log("Starting")
+            // console.log("Starting")
 
             if (showRepeatPassword === true){ 
                 if (password === repeatPassword){
-                    console.log("Sent to requests.js")          //signing up manually
+                    // console.log("Sent to requests.js")          //signing up manually
                     const credential =await googleAuth2(fname, lname ,email, password)
-                    console.log("Credentials:", credential);
+                    // console.log("Credentials:", credential);
 
                     if(credential && credential.user._id){
                         placeToContextState(credential.user)
                     }else{
-                        console.error("Failed to retrieve user ID from credentials: ", credential)
+                        // console.error("Failed to retrieve user ID from credentials: ", credential)
+                        setPasswordError("An Error Occurred. Please Try Again.")
                     }
                 }else{
-                    console.error("passwords not similar")
+                    // console.error("passwords not similar")
                     setPasswordError("Passwords not similar")
                 }
             }else{
                 const credential=await signInAuth(email, password)             //signing in manually
-                console.log("Credentials:", credential);
+                // console.log("Credentials:", credential);
 
                 if(credential && credential._id){
                     placeToContextState(credential)
                 }else{
-                    console.error("Failed to retrieve user ID from credentials: ", credential)
+                    // console.error("Failed to retrieve user ID from credentials: ", credential)
+                    setPasswordError("An Error Occurred. Please Try Again.")
                 }
             }
         }catch(error){
-            console.error("An error occurred", error)
+            // console.error("An error occurred", error)
+            setPasswordError(error);
         }
     }
 
@@ -58,29 +61,31 @@ export default function SignForm(  {formTitle,  ask ,showRepeatPassword}){
         try{
             if (showRepeatPassword === true){   //signing up with google 
                 const credential =await googleAuth1()
-                console.log("Credentials:", credential);
+                // console.log("Credentials:", credential);
 
                 if(credential && credential.user._id){
                     placeToContextState(credential.user);
-                    console.log("CREDENTIALS: ", credential.user);
+                    // console.log("CREDENTIALS: ", credential.user);
                 }else{
-                    console.error("Failed to retrieve user ID from credentials: ", credential)
+                    // console.error("Failed to retrieve user ID from credentials: ", credential)
+                    setPasswordError("An Error Occurred. Please Try Again.")
                 }
                
             }else{                              //signing in with google
                 const credential =await signUpAuth1()
-                console.log("Credentials:", credential);
+                // console.log("Credentials:", credential);
 
                 if(credential && credential._id){
                     placeToContextState(credential);
                 }else{
-                    console.error("Failed to retrieve user ID from credentials: ", credential)
+                    // console.error("Failed to retrieve user ID from credentials: ", credential)
+                    setPasswordError("An Error Occurred. Please Try Again.")
                 }
-            }
-                
+            }                
           
         }catch(error){
-            console.error("An error occurred", error)
+            // console.error("An error occurred", error)
+            setPasswordError(error);
         }
     }
 
@@ -100,7 +105,7 @@ export default function SignForm(  {formTitle,  ask ,showRepeatPassword}){
     const placeToContextState =(creds)=>{
         placeToSessionStorage(creds);       //place the user details to session storage 
         const storedDetails =JSON.parse(sessionStorage.getItem('UserCredentials'))    //retrieve user details from session storage and place to context state
-        console.log('Session storage', storedDetails)
+        // console.log('Session storage', storedDetails)
         if(storedDetails)           //check if data exist before setting state
         {setUserDetails({
             userId:storedDetails.userId,
@@ -110,19 +115,14 @@ export default function SignForm(  {formTitle,  ask ,showRepeatPassword}){
             profilePikUrl:storedDetails.profilePikUrl
         }) 
  
-        console.log("USER Details", userDetails);
+        // console.log("USER Details", userDetails);
         navigate('/dashboard');
     }
-    }
-
-
-    
+    }    
 
     const handleSubmit =(e) =>{
         e.preventDefault()
-        console.log("Form submitted")
         Authenticate()
-        console.log("Authenticated")
     }
    
     //redirect function for  Sign Up  botton click

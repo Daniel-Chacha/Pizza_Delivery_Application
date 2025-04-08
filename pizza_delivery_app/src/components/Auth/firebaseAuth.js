@@ -2,10 +2,9 @@
 import { initializeApp } from "firebase/app";
 // import { getAnalytics } from "firebase/analytics";
 import firebaseConfig from "../../firebaseConfig";
-import { getAuth, GoogleAuthProvider, signInWithPopup,signInWithEmailAndPassword, createUserWithEmailAndPassword ,signOut} from "firebase/auth";
+import { getAuth, GoogleAuthProvider, signInWithPopup,signInWithEmailAndPassword, createUserWithEmailAndPassword} from "firebase/auth";
 import { SaveUserDetails } from "../../Requests/requests";
 import { FetchUserDetails } from "../../Requests/requests";
-// import { useNavigate } from "react-router-dom";
 // import firebase from "firebase/compat/app";
 
 initializeApp(firebaseConfig);
@@ -16,14 +15,15 @@ export default async function googleAuth1(){    //Sign up with google and route 
     try{
        
         const user =await signInWithPopup(auth, provider) // wait fot the signup process to complete
-        console.log("User", user)
+        // console.log("User", user)
         
         const response= saving(user.user)
-        console.log("Saved the User", response)
+        // console.log("Saved the User", response)
         return response;
         
     }catch(error){
-        console.error("An error occurred while authenticating", error)
+        // console.error("An error occurred while authenticating", error)
+        return handleFirebaseAuthError(error);
     }
 }
 
@@ -32,23 +32,28 @@ export  function googleAuth2 (fname, lname, email, password) {  //Sign up with e
         
         const user= signUpAuth2(fname, lname, email, password)
         // const response= saving(user)
-        console.log("Saved the User", user)
+        // console.log("Saved the User", user)
         return user;
        
         
     }catch(error){
-        console.error("An error occurred while authenticating", error)
+        // console.error("An error occurred while authenticating", error)
+        return handleFirebaseAuthError(error);
     }
 }
 
 export async function signUpAuth1(){
-    //sign in with google
-    const result = await signInWithPopup(auth, provider);
-    // const user= result.user; 
-    const email = result.user.email;
-    const response =await FetchUserDetails(email);
-    console.log("RESPONSE: ", response);
-    return response;
+    try{
+        //sign in with google
+        const result = await signInWithPopup(auth, provider);
+        // const user= result.user; 
+        const email = result.user.email;
+        const response =await FetchUserDetails(email);
+        // console.log("RESPONSE: ", response);
+        return response;
+    }catch(error){
+        return handleFirebaseAuthError(error);
+    }
     
 }
 
@@ -58,13 +63,12 @@ export async function signUpAuth2(fname, lname,email, password){
         const profilePikUrl =  "https://i.postimg.cc/mZpMPwxY/profile-photoaidcom-cropped.png";
         
         const response =await verifyAndSave(fname, lname, email, profilePikUrl)
-        console.log("SignUpAuth2 Response: ", response.user);
+        // console.log("SignUpAuth2 Response: ", response.user);
     
         // const user = result.user;
         return response; ;
     }catch(error){
-        console.error("Error in Firebase sign-up:", error.message);
-        return null;
+        return handleFirebaseAuthError(error);
     }
 }
 
@@ -75,16 +79,12 @@ export async function signInAuth(email, password){
         const user =await FetchUserDetails(email);
         return user ;
     }catch(error){
-        handleFirebaseAuthError(error);
+        return handleFirebaseAuthError(error);
     }
 }
 
 
 function saving(user){
-    // if (!user || !user.email) {
-    //     console.error("Invalid user object:", user);
-    //     return null;
-    // }
     //Extract user details
     const [firstname, lastname] = user.displayName ? user.displayName.split(" ") : ["N/A", "N/A"];
     const fname = firstname || "N/A";
@@ -102,14 +102,14 @@ function saving(user){
 }
 
 async function verifyAndSave(fname,lname, email,profilePikUrl){
-    console.log("THE USER DETAILS:", fname, lname, email, profilePikUrl)
+    // console.log("THE USER DETAILS:", fname, lname, email, profilePikUrl)
     if(!fname || !lname || !email || !profilePikUrl){
         console.error('All fields are required')
     }else{
         try{
             const response =await SaveUserDetails(fname, lname, email, profilePikUrl)
             // console.log("User successfully saved", {fname, lname, email, profilePikUrl})
-            console.log("Saved Details: ", response);
+            // console.log("Saved Details: ", response);
             return response;
         }catch(error){
             console.error("Failed to save user details", error);
@@ -118,7 +118,7 @@ async function verifyAndSave(fname,lname, email,profilePikUrl){
         
     }
     
-    console.log("User Details:", fname, lname, email, profilePikUrl)
+    // console.log("User Details:", fname, lname, email, profilePikUrl)
 }
 
 
@@ -126,8 +126,9 @@ async function verifyAndSave(fname,lname, email,profilePikUrl){
 function handleFirebaseAuthError(error){
     const errorMessage = getErrorMessage(error.code);
     console.error("Firebase Authentication error");
+    return errorMessage;
 
-    alert(errorMessage);
+    // alert(errorMessage);
 }
 
 function getErrorMessage(code){
