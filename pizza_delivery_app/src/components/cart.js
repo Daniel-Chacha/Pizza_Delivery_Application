@@ -1,16 +1,23 @@
 import Btn from "./btn"
 import { SignBtn } from "./sign_btn";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ErrorPopUp } from "./errorPoPup";
 
 export default  function Cart( {orders, toggleCart } ){
     //calculating the grandtotal by summing up each order's total price
     const grandTotal =orders.reduce((sum, order) => sum + order.totalPrice, 0);
     const navigate = useNavigate();
+    const [isErrorPopUpOpen, setIsErrorPopUpOpen] = useState(false);
     
     //redirect function for  Sign Up  botton click
     const handleSignClick =(event  , location) =>{
         event.preventDefault();
         navigate(location)
+    }
+
+    const showErrorPopUp = () =>{
+        setIsErrorPopUpOpen(true);
     }
     return(
         <>
@@ -54,8 +61,10 @@ export default  function Cart( {orders, toggleCart } ){
                 <p  className="text-red-500 font-bold text-center"><strong  className="text-2xl">Ksh {grandTotal}</strong></p>
 
                 <div className="flex justify-center">
-                    <Btn name={"Place Order "}/>
+                    <Btn name={"Place Order "} onClick={showErrorPopUp}/>
                 </div>
+
+                <ErrorPopUp isOpen={isErrorPopUpOpen}  onClose={() => setIsErrorPopUpOpen(false)} message="Daraja Integration is still in progress. Thank you for your patience."/>
             </div>
         </>
     )

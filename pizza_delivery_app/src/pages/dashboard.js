@@ -24,7 +24,6 @@ export default function Dashboard(){
     const [orders, setOrders] = useState([])
 
     const {userDetails, setUserDetails} = useContext(UserContext);  //context state that has user registration details
-    const [isErrorPopUpOpen, setIsErrorPopUpOpen] = useState(false);
 
     //function to toggle  cart visibility
     const toggleCart = () =>{

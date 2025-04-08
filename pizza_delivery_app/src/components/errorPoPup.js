@@ -1,7 +1,7 @@
 import { SignBtn } from "./sign_btn";
 import { useNavigate } from "react-router-dom";
 
-export const ErrorPopUp =({isOpen, onClose, message=null, showPassedMessage=false, showSignInUpMessage=false} , showLoadingIcon=false) =>{
+export const ErrorPopUp =({isOpen, onClose, message=null, showPassedMessage=false, showSignInUpMessage=false}) =>{
    const navigate = useNavigate();
     if (!isOpen) return null; // Don't render if not open
       

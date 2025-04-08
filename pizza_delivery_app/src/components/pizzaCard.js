@@ -4,7 +4,6 @@ import Btn from "./btn"
 import Counter from "./counter";
 import { UserContext } from "../userContext";
 import { SaveToCart } from "../Requests/requests";
-import { FetchCartData } from "../Requests/requests";
 import { ErrorPopUp } from "./errorPoPup";
 
 export default function PizzaCard({ pizza , onAddToCart ,reFetchCartData} ){
