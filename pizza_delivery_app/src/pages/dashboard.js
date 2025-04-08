@@ -7,7 +7,6 @@ import Cart from "../components/cart";
 import CustomPizza from "../components/customPizza";
 import { FetchCartData } from "../Requests/requests";
 import { UserContext } from "../userContext";
-import { ErrorPopUp } from "../components/errorPoPup";
 import { FetchPizzas } from "../Requests/requests";
 import PizzaSkeleton from "../components/skeleton";
 
