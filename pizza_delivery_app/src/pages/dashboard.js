@@ -9,9 +9,11 @@ import { FetchCartData } from "../Requests/requests";
 import { UserContext } from "../userContext";
 import { ErrorPopUp } from "../components/errorPoPup";
 import { FetchPizzas } from "../Requests/requests";
+import PizzaSkeleton from "../components/skeleton";
 
 export default function Dashboard(){
     const [pizzaData, setPizzaData] =useState([]);
+    const [loading, setLoading] = useState(true);
 
     // state to control custom  pizza  visibility
     const [showCustomPizza, setShowCustomPizza]  = useState(false);
@@ -38,12 +40,10 @@ export default function Dashboard(){
         //fetch pizza details from the backend
         const fetchPizzas = async() =>{
             try{
-
-                // const response =await fetch("http://localhost:4000/api/pizzas");
-                // const response =await fetch("https://pizza-delivery-backend-59oi.onrender.com/api/pizzas");
-                // const data =await response.json();
                 const data = await FetchPizzas();
                 setPizzaData(data);
+                setLoading(false);
+
             }catch(err){
                 console.error("Error fetching pizzas ", err);
             }
@@ -99,8 +99,8 @@ export default function Dashboard(){
                 <Header showMiniHeader={true} onCartClick ={toggleCart}  toggleCustomPizza={toggleCustomPizza}  />
                 {/* <div className="flex flex-row "> */}
 
-                {!pizzaData ? 
-                    <ErrorPopUp showLoadingIcon={true} isOpen={isErrorPopUpOpen}  onClose={() => setIsErrorPopUpOpen(false)} />
+                {loading ? 
+                    <PizzaSkeleton />
                     :
 
                     <div>
@@ -109,6 +109,7 @@ export default function Dashboard(){
                                 <PizzaCard key={pizza.Id}  pizza={pizza}  onAddToCart={setOrders} reFetchCartData={getCartData} />
                             )) }
                         </div>
+
                         {/*Conditionally render the Cart Component*/}
                         {cartVisible  &&
                             <div className="fixed right-0 top-32 z-20  h-96  overflow-auto  ">
