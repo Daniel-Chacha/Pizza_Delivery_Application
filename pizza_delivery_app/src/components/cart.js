@@ -64,7 +64,7 @@ export default  function Cart( {orders, toggleCart } ){
                     <Btn name={"Place Order "} onClick={showErrorPopUp}/>
                 </div>
 
-                <ErrorPopUp isOpen={isErrorPopUpOpen}  onClose={() => setIsErrorPopUpOpen(false)} message="Daraja Integration is still in progress. Thank you for your patience."/>
+                <ErrorPopUp isOpen={isErrorPopUpOpen} showPassedMessage={true} onClose={() => setIsErrorPopUpOpen(false)} message="Daraja Integration is still in progress. Thank you for your patience."/>
             </div>
         </>
     )
